@@ -1,0 +1,38 @@
+{
+  "default": {
+    "jiraServer": "https://hclsw-jiracentral-eng.atlassian.net",
+    "userId": "user@hcl-software.com.example",
+    "apiToken": "",
+    "maxResults": 100,
+    "cutoffDate": "2025-03-31"
+  },
+  "projects": {
+    "AS": {},
+    "FH": {},
+    "HR": {},
+    "PCS": {},
+    "FSO": {},
+    "OOSM": {},
+    "DES": {},
+    "ITRW": {},
+    "ERXTX": {},
+    "IT": {},
+    "XITRP": {}
+  },
+  "prefix_team_mapping": {
+    "AS": "HCL AION",
+    "DES": "DCEM",
+    "ERXTX": "XHAUL",
+    "FH": "APM-RUM",
+    "FSO": "FSO",
+    "HR": "FSO",
+    "IT": "OOSM",
+    "ITRW": "R&D",
+    "OOSM": "OOSM",
+    "PCS": "UDM/Support",
+    "XITRP": "XHAUL"
+  },
+  "outputFile": "output/JIRAIssues.csv",
+  "checkpointFile": "data/jira_fetch_checkpoint.json",
+  "historyFile": "output/JIRAIssues_History.csv"
+}

@@ -1,0 +1,12 @@
+{
+  "data_fetch": {
+    "default_cutoff_date": "2025-03-31",
+    "jira_cutoff_date": "2025-03-31",
+    "github_cutoff_date": "2025-03-31",
+    "copilot_cutoff_date": "2025-03-31"
+  },
+  "kpi_calendar": {
+    "fiscal_start_month": 4,
+    "fiscal_start_day": 1
+  }
+}

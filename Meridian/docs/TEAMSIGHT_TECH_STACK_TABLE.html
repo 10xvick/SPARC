@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TeamSight – Technology Stack</title>
+  <style>
+    /* ─────────────────────────────────────────────────────────
+       SLIDE-BASED LAYOUT
+       • Screen: dark backdrop, white slide cards with shadow
+       • Print:  @page A4 landscape, each .slide = one page
+    ─────────────────────────────────────────────────────────── */
+    :root {
+      --primary:      #1976d2;
+      --primary-dark: #0d47a1;
+      --bg:           #f5f7fa;
+      --surface:      #ffffff;
+      --border:       #e0e0e0;
+      --text:         #212121;
+      --muted:        #757575;
+      --fe-bg:  #e3f2fd; --fe-txt:  #0d47a1;
+      --be-bg:  #e8f5e9; --be-txt:  #1b5e20;
+      --kpi-bg: #f3e5f5; --kpi-txt: #4a148c;
+      --int-bg: #fff3e0; --int-txt: #e65100;
+      --inf-bg: #eceff1; --inf-txt: #37474f;
+      --dat-bg: #e0f7fa; --dat-txt: #006064;
+      --sec-bg: #fce4ec; --sec-txt: #880e4f;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: var(--text);
+      line-height: 1.55;
+    }
+
+    /* ── Screen body — dark backdrop ─── */
+    body {
+      background: #4a4e58;
+      padding: 28px 20px 48px;
+    }
+
+    /* ─────────────────────────────────────────────
+       SLIDES
+    ─────────────────────────────────────────────── */
+    .slide {
+      background: var(--surface);
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto 28px;
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: 0 6px 32px rgba(0,0,0,0.35);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Coloured top accent band per section */
+    .slide::before {
+      content: '';
+      display: block;
+      height: 5px;
+      background: var(--primary);
+    }
+    .slide-fe::before  { background: var(--fe-txt);  }
+    .slide-be::before  { background: var(--be-txt);  }
+    .slide-kpi::before { background: var(--kpi-txt); }
+    .slide-int::before { background: var(--int-txt); }
+    .slide-dat::before { background: var(--dat-txt); }
+    .slide-sec::before { background: var(--sec-txt); }
+    .slide-dev::before { background: #455a64; }
+    .slide-infra::before { background: var(--inf-txt); }
+
+    /* Slide header row */
+    .slide-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 15px 26px 13px;
+      border-bottom: 1px solid var(--border);
+    }
+    .slide-head-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+      flex: 1;
+    }
+    .slide-head .slide-num {
+      font-size: 0.72rem;
+      font-weight: 500;
+      color: var(--muted);
+      white-space: nowrap;
+      letter-spacing: 0.2px;
+    }
+
+    /* Slide content area */
+    .slide-body {
+      padding: 18px 26px 20px;
+      flex: 1;
+    }
+
+    /* Slide footer strip */
+    .slide-foot {
+      font-size: 0.7rem;
+      color: var(--muted);
+      padding: 7px 26px;
+      border-top: 1px solid var(--border);
+      background: #f9fafb;
+      text-align: right;
+      letter-spacing: 0.1px;
+    }
+
+    /* ─── Cover slide ─────────────────────────────── */
+    .slide-cover::before { height: 0; }  /* no top band on cover */
+
+    .cover-gradient {
+      background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 55%, #42a5f5 100%);
+      color: #fff;
+      padding: 52px 52px 44px;
+    }
+    .cover-gradient h1 {
+      font-size: 2.8rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      line-height: 1.1;
+    }
+    .cover-gradient .cover-sub {
+      font-size: 1.2rem;
+      opacity: 0.88;
+      margin-top: 8px;
+    }
+    .cover-gradient .cover-meta {
+      margin-top: 20px;
+      font-size: 0.82rem;
+      opacity: 0.72;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 22px;
+    }
+    .cover-gradient .cover-meta span::before { content: "● "; }
+    .cover-gradient .cover-sections {
+      margin-top: 28px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .cover-section-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 5px 14px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      color: #fff;
+    }
+    .cover-section-pill .dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.7);
+      display: inline-block;
+    }
+
+    /* ── Layer badge ─────────────────── */
+    .badge {
+      display: inline-block; font-size: 0.68rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.5px;
+      padding: 2px 9px; border-radius: 12px;
+      flex-shrink: 0;
+    }
+    .b-fe  { background: var(--fe-bg);  color: var(--fe-txt);  }
+    .b-be  { background: var(--be-bg);  color: var(--be-txt);  }
+    .b-kpi { background: var(--kpi-bg); color: var(--kpi-txt); }
+    .b-int { background: var(--int-bg); color: var(--int-txt); }
+    .b-inf { background: var(--inf-bg); color: var(--inf-txt); }
+    .b-dat { background: var(--dat-bg); color: var(--dat-txt); }
+    .b-sec { background: var(--sec-bg); color: var(--sec-txt); }
+    .b-dev { background: #eceff1;       color: #455a64; }
+
+    /* ── Table ───────────────────────── */
+    .ts-table {
+      width: 100%; border-collapse: collapse;
+      font-size: 0.875rem;
+      background: var(--surface);
+      border-radius: 8px; overflow: hidden;
+      box-shadow: 0 1px 5px rgba(0,0,0,0.06);
+    }
+    .ts-table thead tr th {
+      background: var(--primary); color: #fff;
+      padding: 10px 14px; text-align: left; font-weight: 600;
+      white-space: nowrap;
+    }
+    .ts-table tbody tr td {
+      padding: 9px 14px; border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    .ts-table tbody tr:last-child td { border-bottom: none; }
+    .ts-table tbody tr:nth-child(even) td { background: #fafbfc; }
+    .ts-table tbody tr:hover td { background: #e3f2fd30; }
+
+    .ts-table .tech-name { font-weight: 600; white-space: nowrap; }
+    .ts-table .version {
+      font-size: 0.72rem; color: var(--muted);
+      background: var(--bg); border: 1px solid var(--border);
+      padding: 1px 6px; border-radius: 10px; margin-left: 5px;
+      white-space: nowrap;
+    }
+    .ts-table code {
+      background: #f3e5f5; color: #6a1b9a;
+      padding: 1px 5px; border-radius: 3px; font-size: 0.8rem;
+    }
+
+    /* pill tags */
+    .pills { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+    .pill {
+      font-size: 0.7rem; padding: 1px 7px; border-radius: 10px;
+      background: var(--bg); border: 1px solid var(--border); color: var(--muted);
+      white-space: nowrap;
+    }
+
+    /* ── License badges ─────────────── */
+    .lic { display: inline-block; font-size: 0.72rem; font-weight: 600;
+           padding: 2px 8px; border-radius: 10px; white-space: nowrap; }
+    .lic-mit        { background: #e8f5e9; color: #1b5e20; border: 1px solid #a5d6a7; }
+    .lic-apache     { background: #e3f2fd; color: #0d47a1; border: 1px solid #90caf9; }
+    .lic-bsd        { background: #fff3e0; color: #e65100; border: 1px solid #ffcc80; }
+    .lic-lgpl       { background: #f3e5f5; color: #4a148c; border: 1px solid #ce93d8; }
+    .lic-gpl        { background: #fce4ec; color: #880e4f; border: 1px solid #f48fb1; }
+    .lic-psf        { background: #e8eaf6; color: #1a237e; border: 1px solid #9fa8da; }
+    .lic-commercial { background: #ffebee; color: #b71c1c; border: 1px solid #ef9a9a; }
+    .lic-internal   { background: #eceff1; color: #546e7a; border: 1px solid #cfd8dc; }
+    .lic-varies     { background: #f5f5f5; color: #616161; border: 1px solid #e0e0e0; }
+
+    /* ─────────────────────────────────────────────
+       PRINT STYLES
+       • One slide per page, A4 landscape
+       • Reduced font + tighter padding so tables fit
+    ─────────────────────────────────────────────── */
+    @media print {
+      @page {
+        size: A4 landscape;
+        margin: 10mm 14mm;
+      }
+
+      html, body {
+        background: #fff !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+
+      .slide {
+        break-before: page;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        max-width: 100% !important;
+        width: 100% !important;
+        margin: 0 !important;
+        border: 1px solid #d0d0d0;
+        overflow: visible !important;
+      }
+
+      .slide:first-child { break-before: avoid; }
+
+      .slide::before { height: 4px !important; }
+      .slide-cover::before { height: 0 !important; }
+
+      .slide-head { padding: 9px 18px 8px !important; }
+      .slide-head-title { font-size: 1rem !important; }
+
+      .slide-body { padding: 10px 18px 12px !important; }
+
+      .slide-foot { padding: 5px 18px !important; font-size: 0.62rem !important; }
+
+      .ts-table { font-size: 0.72rem !important; box-shadow: none !important; }
+      .ts-table thead tr th { padding: 7px 10px !important; font-size: 0.72rem; }
+      .ts-table tbody tr td { padding: 5px 10px !important; }
+
+      .pill { font-size: 0.62rem !important; }
+      .lic  { font-size: 0.62rem !important; padding: 1px 6px !important; }
+      .version { font-size: 0.62rem !important; }
+
+      .cover-gradient { padding: 36px 40px 32px !important; }
+      .cover-gradient h1 { font-size: 2rem !important; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════
+     SLIDE 1 — COVER
+══════════════════════════════════════════════════════════════ -->
+<div class="slide slide-cover">
+  <div class="cover-gradient">
+    <h1>TeamSight</h1>
+    <div class="cover-sub">Technology Stack Reference</div>
+    <div class="cover-meta">
+      <span>Version 2.1.8</span>
+      <span>April 2026</span>
+      <span>Python 3.10+ · Node 18+</span>
+      <span>27 KPIs · 165 Employees · 1 Port (8000)</span>
+    </div>
+    <div class="cover-sections">
+      <span class="cover-section-pill"><span class="dot"></span>Frontend — React / TypeScript SPA</span>
+      <span class="cover-section-pill"><span class="dot"></span>Backend — FastAPI / Python</span>
+      <span class="cover-section-pill"><span class="dot"></span>KPI Engine — Python · src/</span>
+      <span class="cover-section-pill"><span class="dot"></span>Integrations — External APIs</span>
+      <span class="cover-section-pill"><span class="dot"></span>Data Layer — File-Based Store</span>
+      <span class="cover-section-pill"><span class="dot"></span>Security — Auth · RBAC · Transport</span>
+      <span class="cover-section-pill"><span class="dot"></span>Dev Tools — Linting · Testing · Tooling</span>
+      <span class="cover-section-pill"><span class="dot"></span>Infrastructure — Runtime &amp; Deployment</span>
+    </div>
+  </div>
+  <div class="slide-foot">TeamSight v2.1.8 · Technology Stack · April 2026 &nbsp;|&nbsp; Slide 1 of 9</div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     SLIDE 2 — FRONTEND
+══════════════════════════════════════════════════════════════ -->
+<div class="slide slide-fe" id="frontend">
+  <div class="slide-head">
+    <span class="badge b-fe">Frontend</span>
+    <span class="slide-head-title">React / TypeScript SPA</span>
+    <span class="slide-num">Slide 2 of 9</span>
+  </div>
+  <div class="slide-body">
+    <table class="ts-table">
+      <thead>
+        <tr>
+          <th style="width:16%">Technology</th>
+          <th style="width:8%">Version</th>
+          <th style="width:10%">License</th>
+          <th style="width:14%">Category</th>
+          <th style="width:28%">Purpose</th>
+          <th>Key Features Used</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="tech-name">React</td>
+          <td><span class="version">18.2</span></td>
+          <td><span class="lic lic-mit">MIT</span></td>
+          <td>UI Framework</td>
+          <td>Core component model. Functional components with hooks throughout — no class-based components.</td>
+          <td><div class="pills"><span class="pill">useState</span><span class="pill">useEffect</span><span class="pill">useCallback</span><span class="pill">Context API</span></div></td>
+        </tr>
+        <tr>
+          <td class="tech-name">TypeScript</td>
+          <td><span class="version">5.3</span></td>
+          <td><span class="lic lic-apache">Apache 2.0</span></td>
+          <td>Language</td>
+          <td>Static typing for all components, API response shapes, and state models. Strict mode enabled.</td>
+          <td><div class="pills"><span class="pill">Strict mode</span><span class="pill">Type inference</span><span class="pill">Generics</span></div></td>
+        </tr>
+        <tr>
+          <td class="tech-name">Vite</td>
+          <td><span class="version">5.1</span></td>
+          <td><span class="lic lic-mit">MIT</span></td>
+          <td>Build Tool</td>
+          <td>Dev server with instant HMR; production builds via Rollup into <code>dist/</code>.</td>
+          <td><div class="pills"><span class="pill">ESM</span><span class="pill">HMR</span><span class="pill">Tree-shaking</span><span class="pill">Code splitting</span></div></td>
+        </tr>
+        <tr>
+          <td class="tech-name">Material UI</td>
+          <td><span class="version">v5.15</span></td>
+          <td><span class="lic lic-mit">MIT</span></td>
+          <td>Component Library</td>
+          <td>Design system providing layout, typography, icons, forms, dialogs, data tables, and theming.</td>
+          <td><div class="pills"><span class="pill">Emotion CSS-in-JS</span><span class="pill">sx prop</span><span class="pill">Theme overrides</span><span class="pill">MUI Icons</span></div></td>
+        </tr>
+        <tr>
+          <td class="tech-name">Apache ECharts</td>
+          <td><span class="version">5.4</span></td>
+          <td><span class="lic lic-apache">Apache 2.0</span></td>
+          <td>Charting (primary)</td>
+          <td>Main visualisation engine. Used for bar, stacked bar, line, radar, heatmap, and trend charts.</td>
+          <td><div class="pills"><span class="pill">Canvas/SVG</span><span class="pill">echarts-for-react</span><span class="pill">Radar</span><span class="pill">Heatmap</span></div></td>
+        </tr>
+        <tr>
+          <td class="tech-name">Recharts</td>
+          <td><span class="version">3.8</span></td>
+          <td><span class="lic lic-mit">MIT</span></td>
+          <td>Charting (secondary)</td>
+          <td>Responsive SVG-based charts for line, area, and pie visualisations in report pages.</td>
+          <td><div class="pills"><span class="pill">SVG</span><span class="pill">ResponsiveContainer</span><span class="pill">Tooltip</span></div></td>
+        </tr>
+        <tr>
+          <td class="tech-name">vis-network</td>
+          <td><span class="version">10.0</span></td>
+          <td><span class="lic lic-apache">Apache 2.0</span></td>
+          <td>Graph Visualisation</td>
+          <td>Interactive physics-based network graph for the JIRA Epic Hierarchy tree report.</td>
+          <td><div class="pills"><span class="pill">Canvas</span><span class="pill">Physics engine</span><span class="pill">Hierarchical layout</span></div></td>
+        </tr>
+        <tr>
+          <td class="tech-name">Zustand</td>
+          <td><span class="version">4.5</span></td>
+          <td><span class="lic lic-mit">MIT</span></td>
+          <td>State Management</td>
+          <td>Lightweight global store for authentication state, user context, and shared UI state.</td>
+          <td><div class="pills"><span class="pill">Minimal re-renders</span><span class="pill">Devtools</span><span class="pill">Persist middleware</span></div></td>
+        </tr>
+        <tr>
+          <td class="tech-name">React Router DOM</td>
+          <td><span class="version">6.22</span></td>
+          <td><span class="lic lic-mit">MIT</span></td>
+          <td>Routing</td>
+          <td>Client-side SPA routing. URL query parameters drive Team → Scrum → Employee drill-down.</td>
+          <td><div class="pills"><span class="pill">Nested routes</span><span class="pill">useSearchParams</span><span class="pill">Protected routes</span></div></td>
+        </tr>
+        <tr>
+          <td class="tech-name">Axios</td>
+          <td><span class="version">1.6</span></td>
+          <td><span class="lic lic-mit">MIT</span></td>
+          <td>HTTP Client</td>
+          <td>All REST API calls. Request interceptors automatically attach JWT Bearer token.</td>
+          <td><div class="pills"><span class="pill">Interceptors</span><span class="pill">Error handling</span><span class="pill">CancelToken</span></div></td>
+        </tr>
+        <tr>
+          <td class="tech-name">date-fns</td>
+          <td><span class="version">3.3</span></td>
+          <td><span class="lic lic-mit">MIT</span></td>
+          <td>Date Utilities</td>
+          <td>Period comparison, sprint timeline display, and date formatting across dashboard pages.</td>
+          <td><div class="pills"><span class="pill">Tree-shakeable</span><span class="pill">Immutable</span><span class="pill">ISO week</span></div></td>
+        </tr>
+        <tr>
+          <td class="tech-name">jwt-decode</td>
+          <td><span class="version">4.0</span></td>
+          <td><span class="lic lic-mit">MIT</span></td>
+          <td>Auth Helper</td>
+          <td>Decodes JWT payload on the frontend to read user role and SAPID from token claims.</td>
+          <td><div class="pills"><span class="pill">Lightweight</span><span class="pill">No verification (UI only)</span></div></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="slide-foot">TeamSight v2.1.8 · Technology Stack · April 2026 &nbsp;|&nbsp; Slide 2 of 9</div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     SLIDE 3 — BACKEND
+══════════════════════════════════════════════════════════════ -->
+<div class="slide slide-be" id="backend">
+  <div class="slide-head">
+    <span class="badge b-be">Backend</span>
+    <span class="slide-head-title">FastAPI / Python</span>
+    <span class="slide-num">Slide 3 of 9</span>
+  </div>
+  <div class="slide-body">
+    <table class="ts-table">
+      <thead>
+        <tr>
+          <th style="width:16%">Technology</th>
+          <th style="width:8%">Version</th>
+          <th style="width:10%">License</th>
+          <th style="width:14%">Category</th>
+          <th style="width:28%">Purpose</th>
+          <th>Key Features Used</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="tech-name">FastAPI</td>
+          <td><span class="version">0.109</span></td>
+          <td><span class="lic lic-mit">MIT</span></td>
+          <td>Web Framework</td>
+          <td>Async REST API framework. Auto-generates OpenAPI docs at <code>/docs</code> and <code>/redoc</code>.</td>
+          <td><div class="pills"><span class="pill">Async routes</span><span class="pill">Dependency injection</span><span class="pill">OpenAPI</span><span class="pill">lifespan</span></div></td>
+        </tr>
+        <tr>
+          <td class="tech-name">Uvicorn</td>
+          <td><span class="version">0.27</span></td>
+          <td><span class="lic lic-bsd">BSD-3-Clause</span></td>
+          <td>ASGI Server</td>
+          <td>Production ASGI server. Runs on port 8000, serves both the API and pre-built React static files.</td>
+          <td><div class="pills"><span class="pill">ASGI</span><span class="pill">HTTP/1.1</span><span class="pill">Standard extras</span></div></td>
+        </tr>
+        <tr>
+          <td class="tech-name">Pydantic</td>
+          <td><span class="version">v2.1</span></td>
+          <td><span class="lic lic-mit">MIT</span></td>
+          <td>Validation / Settings</td>
+          <td>Request/response model validation; <code>pydantic-settings</code> for environment-based configuration.</td>
+          <td><div class="pills"><span class="pill">BaseModel</span><span class="pill">BaseSettings</span><span class="pill">model_validator</span></div></td>
+        </tr>
+        <tr>
+          <td class="tech-name">APScheduler</td>
+          <td><span class="version">3.10</span></td>
+          <td><span class="lic lic-mit">MIT</span></td>
+          <td>Job Scheduler</td>
+          <td>In-process scheduler for automated KPI recalculations. Persists job state between restarts.</td>
+          <td><div class="pills"><span class="pill">CronTrigger</span><span class="pill">IntervalTrigger</span><span class="pill">Persistent state</span></div></td>
+        </tr>
+        <tr>
+          <td class="tech-name">python-jose</td>
+          <td><span class="version">3.3</span></td>
+          <td><span class="lic lic-mit">MIT</span></td>
+          <td>JWT</td>
+          <td>Signs and verifies JWT access tokens. HS256 algorithm, 24-hour expiry.</td>
+          <td><div class="pills"><span class="pill">HS256</span><span class="pill">encode/decode</span><span class="pill">ExpiredSignatureError</span></div></td>
+        </tr>
+        <tr>
+          <td class="tech-name">passlib + bcrypt</td>
+          <td><span class="version">1.7</span></td>
+          <td><span class="lic lic-bsd">BSD-3-Clause</span></td>
+          <td>Password Hashing</td>
+          <td>Secure password storage with bcrypt hashing and auto-generated salts.</td>
+          <td><div class="pills"><span class="pill">bcrypt</span><span class="pill">CryptContext</span><span class="pill">verify</span></div></td>
+        </tr>
+        <tr>
+          <td class="tech-name">pandas</td>
+          <td><span class="version">2.2</span></td>
+          <td><span class="lic lic-bsd">BSD-3-Clause</span></td>
+          <td>Data Processing</td>
+          <td>Load, join, filter, and aggregate KPI CSV snapshots. pyarrow used as the optional backend for speed.</td>
+          <td><div class="pills"><span class="pill">DataFrame</span><span class="pill">groupby</span><span class="pill">merge</span><span class="pill">pyarrow backend</span></div></td>
+        </tr>
+        <tr>
+          <td class="tech-name">numpy</td>
+          <td><span class="version">1.26</span></td>
+          <td><span class="lic lic-bsd">BSD-3-Clause</span></td>
+          <td>Numerical</td>
+          <td>Numeric operations within KPI aggregations and scoring computations.</td>
+          <td><div class="pills"><span class="pill">ndarray</span><span class="pill">nan handling</span></div></td>
+        </tr>
+        <tr>
+          <td class="tech-name">aiohttp</td>
+          <td><span class="version">3.9</span></td>
+          <td><span class="lic lic-apache">Apache 2.0</span></td>
+          <td>Async HTTP Client</td>
+          <td>Async HTTP calls in data fetchers for JIRA and GitHub APIs.</td>
+          <td><div class="pills"><span class="pill">ClientSession</span><span class="pill">Connection pool</span></div></td>
+        </tr>
+        <tr>
+          <td class="tech-name">watchdog</td>
+          <td><span class="version">4.0</span></td>
+          <td><span class="lic lic-apache">Apache 2.0</span></td>
+          <td>File Monitoring</td>
+          <td>Monitors <code>output/</code> for CSV changes and triggers API cache invalidation.</td>
+          <td><div class="pills"><span class="pill">FSEvents</span><span class="pill">inotify</span><span class="pill">Observer</span></div></td>
+        </tr>
+        <tr>
+          <td class="tech-name">psutil</td>
+          <td><span class="version">5.9</span></td>
+          <td><span class="lic lic-bsd">BSD-3-Clause</span></td>
+          <td>System Metrics</td>
+          <td>CPU, RAM, and disk usage exposed through the Admin health-check API endpoint.</td>
+          <td><div class="pills"><span class="pill">cpu_percent</span><span class="pill">virtual_memory</span><span class="pill">disk_usage</span></div></td>
+        </tr>
+        <tr>
+          <td class="tech-name">openpyxl</td>
+          <td><span class="version">3.1</span></td>
+          <td><span class="lic lic-mit">MIT</span></td>
+          <td>Export</td>
+          <td>Generates Excel (.xlsx) exports of KPI matrix and report data.</td>
+          <td><div class="pills"><span class="pill">Workbook</span><span class="pill">Styles</span></div></td>
+        </tr>
+        <tr>
+          <td class="tech-name">WeasyPrint</td>
+          <td><span class="version">61.2</span></td>
+          <td><span class="lic lic-bsd">BSD-3-Clause</span></td>
+          <td>Export</td>
+          <td>HTML-to-PDF rendering for dashboard report exports.</td>
+          <td><div class="pills"><span class="pill">HTML → PDF</span><span class="pill">CSS support</span></div></td>
+        </tr>
+        <tr>
+          <td class="tech-name">ReportLab</td>
+          <td><span class="version">4.1</span></td>
+          <td><span class="lic lic-bsd">BSD (RL)</span></td>
+          <td>Export</td>
+          <td>Programmatic PDF generation for structured report documents.</td>
+          <td><div class="pills"><span class="pill">PDF canvas</span><span class="pill">Tables</span></div></td>
+        </tr>
+        <tr>
+          <td class="tech-name">pyodbc</td>
+          <td><span class="version">5.0</span></td>
+          <td><span class="lic lic-mit">MIT</span></td>
+          <td>Database (optional)</td>
+          <td>ODBC connectivity for optional Azure SQL integration for audit logs and cross-server data.</td>
+          <td><div class="pills"><span class="pill">ODBC</span><span class="pill">Azure SQL</span><span class="pill">Optional</span></div></td>
+        </tr>
+        <tr>
+          <td class="tech-name">python-dotenv</td>
+          <td><span class="version">1.0</span></td>
+          <td><span class="lic lic-bsd">BSD-3-Clause</span></td>
+          <td>Config</td>
+          <td>Loads environment variables from <code>.env</code> file into pydantic-settings.</td>
+          <td><div class="pills"><span class="pill">.env file</span><span class="pill">Secret injection</span></div></td>
+        </tr>
+        <tr>
+          <td class="tech-name">pyarrow</td>
+          <td><span class="version">14.0+</span></td>
+          <td><span class="lic lic-apache">Apache 2.0</span></td>
+          <td>Data Serialisation</td>
+          <td>High-performance columnar backend for pandas CSV I/O.</td>
+          <td><div class="pills"><span class="pill">Columnar format</span><span class="pill">Fast CSV parse</span></div></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="slide-foot">TeamSight v2.1.8 · Technology Stack · April 2026 &nbsp;|&nbsp; Slide 3 of 9</div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     SLIDE 4 — KPI ENGINE
+══════════════════════════════════════════════════════════════ -->
+<div class="slide slide-kpi" id="kpi-engine">
+  <div class="slide-head">
+    <span class="badge b-kpi">KPI Engine</span>
+    <span class="slide-head-title">Python · src/</span>
+    <span class="slide-num">Slide 4 of 9</span>
+  </div>
+  <div class="slide-body">
+    <table class="ts-table">
+      <thead>
+        <tr>
+          <th style="width:22%">Component</th>
+          <th style="width:20%">File / Module</th>
+          <th style="width:25%">Role</th>
+          <th>Details</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="tech-name">KPI Orchestrator</td>
+          <td><code>KppEvaluator.py</code></td>
+          <td>Central dispatcher</td>
+          <td>Registers 27 KPIs, resolves equivalents (k8→k4, k20→k16, k22→k18), loads inputs, dispatches per-KPI runs. CLI entry: <code>teamsight-kpi</code></td>
+        </tr>
+        <tr>
+          <td class="tech-name">KPI Scripts</td>
+          <td><code>kpp_k*.py</code> (50+ files)</td>
+          <td>Individual KPI logic</td>
+          <td>One file per KPI metric. Each reads Resources.csv + Roles.csv + raw source CSVs and emits a standardised 11-column output CSV to <code>output/k*-data.csv</code></td>
+        </tr>
+        <tr>
+          <td class="tech-name">KPI Helpers</td>
+          <td><code>kpi_helpers.py</code></td>
+          <td>Shared utilities</td>
+          <td>Fiscal calendar logic, ISO week / month / quarter label generation, SAPID string normalisation</td>
+        </tr>
+        <tr>
+          <td class="tech-name">JIRA Fetcher</td>
+          <td><code>jira_fetch.py</code></td>
+          <td>Data ingestion</td>
+          <td>JIRA REST API v2/v3 — incremental fetch with checkpoint. Writes <code>JIRAIssues.csv</code>. CLI: <code>teamsight-jira-fetch</code></td>
+        </tr>
+        <tr>
+          <td class="tech-name">GitHub Fetcher</td>
+          <td><code>github_fetch.py</code></td>
+          <td>Data ingestion</td>
+          <td>GitHub REST API — commits, PRs, reviews. Maps GitHub usernames to SAPID via Resources.csv. CLI: <code>teamsight-github-fetch</code></td>
+        </tr>
+        <tr>
+          <td class="tech-name">Copilot Metrics Fetcher</td>
+          <td><code>copilot_metrics_fetch.py</code></td>
+          <td>Data ingestion</td>
+          <td>GitHub Copilot Metrics API (org/enterprise level). Fetches active users, suggested lines, acceptance rates</td>
+        </tr>
+        <tr>
+          <td class="tech-name">Security Scan Fetcher</td>
+          <td><code>security_scan_fetch.py</code></td>
+          <td>Data ingestion</td>
+          <td>Config-driven integration with SAST/DAST tools. Project→team mappings in <code>security_scan_config.json</code></td>
+        </tr>
+        <tr>
+          <td class="tech-name">Bug Cycle Time</td>
+          <td><code>kpp_bug_cycle_time.py</code></td>
+          <td>Specialised report</td>
+          <td>Computes resolution cycle time for JIRA bug tickets. Used by the Bug Cycle Time report page</td>
+        </tr>
+        <tr>
+          <td class="tech-name">Replan Tracker</td>
+          <td><code>kpp_replan_tracker.py</code></td>
+          <td>Specialised report</td>
+          <td>Detects sprint replanning events from JIRA sprint history changelog</td>
+        </tr>
+        <tr>
+          <td class="tech-name">Assignee Delay</td>
+          <td><code>kpp_assignee_attributable_delay.py</code></td>
+          <td>Specialised report</td>
+          <td>Computes delay windows attributable to assignee inactivity per JIRA issue</td>
+        </tr>
+        <tr>
+          <td class="tech-name">Epic Tree Cache Job</td>
+          <td><code>jira_epic_tree_cache_job.py</code></td>
+          <td>Background job</td>
+          <td>Pre-computes and caches the JIRA epic → story → task hierarchy for the tree report</td>
+        </tr>
+        <tr>
+          <td class="tech-name">Daily Backup Job</td>
+          <td><code>daily_backup_matrix_job.py</code></td>
+          <td>Maintenance job</td>
+          <td>Automated daily backup of KPI matrix data to <code>backup/</code> directory</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="slide-foot">TeamSight v2.1.8 · Technology Stack · April 2026 &nbsp;|&nbsp; Slide 4 of 9</div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     SLIDE 5 — INTEGRATIONS
+══════════════════════════════════════════════════════════════ -->
+<div class="slide slide-int" id="integrations">
+  <div class="slide-head">
+    <span class="badge b-int">Integrations</span>
+    <span class="slide-head-title">External APIs</span>
+    <span class="slide-num">Slide 5 of 9</span>
+  </div>
+  <div class="slide-body">
+    <table class="ts-table">
+      <thead>
+        <tr>
+          <th style="width:18%">System</th>
+          <th style="width:16%">Protocol / Auth</th>
+          <th style="width:10%">License / Terms</th>
+          <th style="width:17%">Config File</th>
+          <th style="width:20%">Data Collected</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="tech-name">Atlassian JIRA</td>
+          <td>REST v2/v3 · API Token</td>
+          <td><span class="lic lic-commercial">Commercial</span></td>
+          <td><code>jira_config.json</code></td>
+          <td>Issues, epics, sprints, changelog, assignees, labels, story points</td>
+          <td>Incremental sync with checkpoint; paginated; writes <code>JIRAIssues.csv</code></td>
+        </tr>
+        <tr>
+          <td class="tech-name">GitHub REST API</td>
+          <td>REST v3 · PAT</td>
+          <td><span class="lic lic-commercial">Free / Commercial</span></td>
+          <td><code>github_config.json</code></td>
+          <td>Commits, pull requests, code reviews, user activity per repo</td>
+          <td>Username → SAPID mapping via Resources.csv; paginated; writes <code>github_commits.csv</code></td>
+        </tr>
+        <tr>
+          <td class="tech-name">GitHub Copilot Metrics</td>
+          <td>REST (Beta) · GitHub App Token</td>
+          <td><span class="lic lic-commercial">Commercial</span></td>
+          <td><code>copilot_metrics_config.json</code></td>
+          <td>Active Copilot users, suggested lines, accepted lines, acceptance rate</td>
+          <td>Org/enterprise-level; aggregated per user; Beta API endpoint</td>
+        </tr>
+        <tr>
+          <td class="tech-name">Security Scan Tools</td>
+          <td>Tool-specific REST · API Key</td>
+          <td><span class="lic lic-varies">Varies</span></td>
+          <td><code>security_scan_config.json</code></td>
+          <td>Vulnerability counts, scan pass/fail, severity breakdown</td>
+          <td>Config-driven project→team mapping; supports SonarQube, Checkmarx, etc.</td>
+        </tr>
+        <tr>
+          <td class="tech-name">Azure SQL</td>
+          <td>ODBC · SQL Auth / AAD</td>
+          <td><span class="lic lic-commercial">Commercial</span></td>
+          <td><code>.env</code> (connection string)</td>
+          <td>Audit logs, long-term KPI archival</td>
+          <td>Optional; pyodbc 5.0; falls back gracefully if unavailable</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="slide-foot">TeamSight v2.1.8 · Technology Stack · April 2026 &nbsp;|&nbsp; Slide 5 of 9</div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     SLIDE 6 — DATA LAYER
+══════════════════════════════════════════════════════════════ -->
+<div class="slide slide-dat" id="data">
+  <div class="slide-head">
+    <span class="badge b-dat">Data Layer</span>
+    <span class="slide-head-title">File-Based Store (CSV / JSON)</span>
+    <span class="slide-num">Slide 6 of 9</span>
+  </div>
+  <div class="slide-body">
+    <table class="ts-table">
+      <thead>
+        <tr>
+          <th style="width:28%">File / Directory</th>
+          <th style="width:8%">Format</th>
+          <th style="width:15%">Location</th>
+          <th>Purpose &amp; Key Columns</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="tech-name">Resources.csv</td>
+          <td>CSV</td>
+          <td><code>config/</code></td>
+          <td>165 employees — SAPID (PK), Name, Team, Primary Role, Secondary Role, Scrum. Referenced by every KPI script and backend service</td>
+        </tr>
+        <tr>
+          <td class="tech-name">Roles.csv</td>
+          <td>CSV</td>
+          <td><code>config/</code></td>
+          <td>298 rows — KPI definitions: Index (KPI ID), Role, KPI Goal, Measurement Criteria, Tool, Measure, Type, Weekly/Quarterly/Annual Targets, Goal Type</td>
+        </tr>
+        <tr>
+          <td class="tech-name">k*-data.csv (per KPI)</td>
+          <td>CSV</td>
+          <td><code>output/</code></td>
+          <td>KPI snapshots per employee per period. Schema: <code>CurrentDate, Week, Month, Quarter, Year, SAPID, Name, Weekly, Monthly, Quarterly, Annual</code></td>
+        </tr>
+        <tr>
+          <td class="tech-name">JIRAIssues.csv</td>
+          <td>CSV</td>
+          <td><code>output/</code></td>
+          <td>Full JIRA issue snapshot with key, summary, assignee, status, sprint, labels, story points, changelog</td>
+        </tr>
+        <tr>
+          <td class="tech-name">github_commits.csv</td>
+          <td>CSV</td>
+          <td><code>output/</code></td>
+          <td>GitHub commit log with author (SAPID-mapped), repo, date, file change counts</td>
+        </tr>
+        <tr>
+          <td class="tech-name">jira_config.json</td>
+          <td>JSON</td>
+          <td><code>config/</code></td>
+          <td>JIRA server URL, project keys, authentication token, fetch settings</td>
+        </tr>
+        <tr>
+          <td class="tech-name">github_config.json</td>
+          <td>JSON</td>
+          <td><code>config/</code></td>
+          <td>GitHub organisation, repository list, personal access token</td>
+        </tr>
+        <tr>
+          <td class="tech-name">copilot_metrics_config.json</td>
+          <td>JSON</td>
+          <td><code>config/</code></td>
+          <td>GitHub org/enterprise slug, API token, metric collection settings</td>
+        </tr>
+        <tr>
+          <td class="tech-name">security_scan_config.json</td>
+          <td>JSON</td>
+          <td><code>config/</code></td>
+          <td>Security tool endpoints, project→team mappings, credential references</td>
+        </tr>
+        <tr>
+          <td class="tech-name">scoring_config.json</td>
+          <td>JSON</td>
+          <td><code>config/</code></td>
+          <td>ROG threshold overrides per KPI (defaults: Green ≥ 0.62, Orange ≥ 0.40)</td>
+        </tr>
+        <tr>
+          <td class="tech-name">users.json</td>
+          <td>JSON</td>
+          <td><code>data/</code></td>
+          <td>Dashboard login users — username, bcrypt-hashed password, role (Admin/Viewer/Manager/API User)</td>
+        </tr>
+        <tr>
+          <td class="tech-name">role_permissions.json</td>
+          <td>JSON</td>
+          <td><code>data/</code></td>
+          <td>RBAC permission matrix — maps each role to allowed API operations</td>
+        </tr>
+        <tr>
+          <td class="tech-name">scheduler_state.json</td>
+          <td>JSON</td>
+          <td><code>data/</code></td>
+          <td>APScheduler persistent job state — next run times, job IDs, trigger configs</td>
+        </tr>
+        <tr>
+          <td class="tech-name">fetch_checkpoint.json</td>
+          <td>JSON</td>
+          <td><code>data/</code></td>
+          <td>Last-fetched timestamps for incremental JIRA / GitHub sync</td>
+        </tr>
+        <tr>
+          <td class="tech-name">api_keys.json</td>
+          <td>JSON</td>
+          <td><code>data/</code></td>
+          <td>API key registry for external service authentication tokens</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="slide-foot">TeamSight v2.1.8 · Technology Stack · April 2026 &nbsp;|&nbsp; Slide 6 of 9</div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     SLIDE 7 — SECURITY
+══════════════════════════════════════════════════════════════ -->
+<div class="slide slide-sec" id="security">
+  <div class="slide-head">
+    <span class="badge b-sec">Security</span>
+    <span class="slide-head-title">Auth · RBAC · Transport</span>
+    <span class="slide-num">Slide 7 of 9</span>
+  </div>
+  <div class="slide-body">
+    <table class="ts-table">
+      <thead>
+        <tr>
+          <th style="width:20%">Mechanism</th>
+          <th style="width:18%">Technology</th>
+          <th style="width:22%">Where Applied</th>
+          <th>Details</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="tech-name">JWT Authentication</td>
+          <td>python-jose HS256</td>
+          <td>All API endpoints (except <code>/auth/login</code>, <code>/health</code>)</td>
+          <td>Bearer tokens signed with HS256. 24-hour expiry. Validated via <code>get_current_user</code> FastAPI dependency</td>
+        </tr>
+        <tr>
+          <td class="tech-name">Password Hashing</td>
+          <td>passlib / bcrypt</td>
+          <td>User credentials in <code>users.json</code></td>
+          <td>Passwords never stored in plain text. bcrypt with auto-generated salts; CryptContext for hash verification</td>
+        </tr>
+        <tr>
+          <td class="tech-name">Role-Based Access Control</td>
+          <td>FastAPI dependencies</td>
+          <td>Protected API routes</td>
+          <td>Four roles: Admin, API User, Viewer, Manager. Enforced via <code>require_role()</code>, <code>require_permission()</code>, <code>require_admin()</code> dependencies</td>
+        </tr>
+        <tr>
+          <td class="tech-name">CORS Middleware</td>
+          <td>FastAPI CORSMiddleware</td>
+          <td>All cross-origin requests</td>
+          <td>Configurable allowed origins via <code>cors_origins</code> setting. Development: wildcard; production: restrict to deployment domain</td>
+        </tr>
+        <tr>
+          <td class="tech-name">Secret Management</td>
+          <td>python-dotenv + pydantic-settings</td>
+          <td>JWT secret, API tokens</td>
+          <td>All sensitive values loaded from <code>dashboard/backend/.env</code>. Never hardcoded in source</td>
+        </tr>
+        <tr>
+          <td class="tech-name">Input Validation</td>
+          <td>Pydantic v2</td>
+          <td>All API request bodies &amp; query params</td>
+          <td>Full runtime type validation before reaching business logic. Prevents injection-style attacks at system boundary</td>
+        </tr>
+        <tr>
+          <td class="tech-name">Global Error Handler</td>
+          <td>FastAPI exception_handler</td>
+          <td>Uncaught exceptions</td>
+          <td>Returns sanitised JSON error (no stack traces in production). Logs full context server-side</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="slide-foot">TeamSight v2.1.8 · Technology Stack · April 2026 &nbsp;|&nbsp; Slide 7 of 9</div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     SLIDE 8 — DEV TOOLS
+══════════════════════════════════════════════════════════════ -->
+<div class="slide slide-dev" id="devtools">
+  <div class="slide-head">
+    <span class="badge b-dev">Dev Tools</span>
+    <span class="slide-head-title">Linting · Testing · Tooling</span>
+    <span class="slide-num">Slide 8 of 9</span>
+  </div>
+  <div class="slide-body">
+    <table class="ts-table">
+      <thead>
+        <tr>
+          <th style="width:18%">Tool</th>
+          <th style="width:14%">Version</th>
+          <th style="width:10%">License</th>
+          <th style="width:16%">Language</th>
+          <th>Purpose</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="tech-name">ESLint</td>
+          <td><span class="version">8.56</span></td>
+          <td><span class="lic lic-mit">MIT</span></td>
+          <td>TypeScript / JavaScript</td>
+          <td>Static analysis and code quality enforcement. Plugins: <code>@typescript-eslint</code>, <code>react-hooks</code>, <code>react-refresh</code></td>
+        </tr>
+        <tr>
+          <td class="tech-name">TypeScript Compiler (tsc)</td>
+          <td><span class="version">5.3</span></td>
+          <td><span class="lic lic-apache">Apache 2.0</span></td>
+          <td>TypeScript</td>
+          <td>Type-checking (<code>tsc --noEmit</code>) and production compile step (via Vite)</td>
+        </tr>
+        <tr>
+          <td class="tech-name">setuptools + build</td>
+          <td>—</td>
+          <td><span class="lic lic-mit">MIT</span></td>
+          <td>Python</td>
+          <td>Python package build: <code>python -m build --wheel</code> produces <code>teamsight-X.X.X.whl</code></td>
+        </tr>
+        <tr>
+          <td class="tech-name">manage.sh</td>
+          <td>—</td>
+          <td><span class="lic lic-internal">Internal</span></td>
+          <td>Bash</td>
+          <td>Unified service management: <code>start</code> / <code>stop</code> / <code>restart</code> / <code>status</code> / <code>logs</code> / <code>follow</code></td>
+        </tr>
+        <tr>
+          <td class="tech-name">package_complete_bundle.sh</td>
+          <td>—</td>
+          <td><span class="lic lic-internal">Internal</span></td>
+          <td>Bash</td>
+          <td>Packages code + wheel into a <code>teamsight-complete-*.tar.gz</code> deployment bundle (never overwrites data files)</td>
+        </tr>
+        <tr>
+          <td class="tech-name">deploy_complete_bundle.sh</td>
+          <td>—</td>
+          <td><span class="lic lic-internal">Internal</span></td>
+          <td>Bash</td>
+          <td>Extracts and installs the bundle on the remote server; installs wheel; starts services</td>
+        </tr>
+        <tr>
+          <td class="tech-name">chardet</td>
+          <td><span class="version">&lt;6</span></td>
+          <td><span class="lic lic-lgpl">LGPL 2.1</span></td>
+          <td>Python</td>
+          <td>Character-encoding detection for CSV files with mixed encodings</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="slide-foot">TeamSight v2.1.8 · Technology Stack · April 2026 &nbsp;|&nbsp; Slide 8 of 9</div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     SLIDE 9 — INFRASTRUCTURE
+══════════════════════════════════════════════════════════════ -->
+<div class="slide slide-infra" id="infra">
+  <div class="slide-head">
+    <span class="badge b-inf">Infrastructure</span>
+    <span class="slide-head-title">Runtime &amp; Deployment</span>
+    <span class="slide-num">Slide 9 of 9</span>
+  </div>
+  <div class="slide-body">
+    <table class="ts-table">
+      <thead>
+        <tr>
+          <th style="width:20%">Component</th>
+          <th style="width:18%">Technology</th>
+          <th style="width:10%">License</th>
+          <th style="width:15%">Details</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="tech-name">Python Runtime</td>
+          <td>CPython 3.10+</td>
+          <td><span class="lic lic-psf">PSF License</span></td>
+          <td>Two venvs: <code>.venv/</code> &amp; <code>dashboard/backend/venv/</code></td>
+          <td>KPI engine and backend use separate virtual environments to isolate dependencies</td>
+        </tr>
+        <tr>
+          <td class="tech-name">Node.js Runtime</td>
+          <td>Node 18+</td>
+          <td><span class="lic lic-mit">MIT</span></td>
+          <td>Build-time only</td>
+          <td>Required only to run <code>npm run build</code>. Not needed at runtime — SPA served as static files from Python</td>
+        </tr>
+        <tr>
+          <td class="tech-name">Remote Server</td>
+          <td>Linux (Ubuntu/Debian)</td>
+          <td><span class="lic lic-gpl">GPL-2.0+</span></td>
+          <td><code>root@10.222.2.217</code></td>
+          <td>Deployment path: <code>/opt/teamsight/teamsight/</code>. Single port 8000 serves API + SPA. No reverse proxy required</td>
+        </tr>
+        <tr>
+          <td class="tech-name">Backend Port</td>
+          <td>Uvicorn : 8000</td>
+          <td><span class="lic lic-bsd">BSD-3-Clause</span></td>
+          <td>HTTP/1.1</td>
+          <td>Serves REST API at <code>/api/*</code> and React SPA at <code>/</code> and <code>/app/*</code></td>
+        </tr>
+        <tr>
+          <td class="tech-name">Frontend Dev Port</td>
+          <td>Vite : 5173</td>
+          <td><span class="lic lic-mit">MIT</span></td>
+          <td>Development only</td>
+          <td>HMR dev server used locally. Not exposed on remote — SPA is compiled and served from port 8000</td>
+        </tr>
+        <tr>
+          <td class="tech-name">Process Management</td>
+          <td>manage.sh (Bash)</td>
+          <td><span class="lic lic-internal">Internal</span></td>
+          <td>PID files in <code>.pids/</code></td>
+          <td>Start/stop/restart backend and frontend processes. Logs written to <code>dashboard/logs/</code></td>
+        </tr>
+        <tr>
+          <td class="tech-name">Package Distribution</td>
+          <td>Python wheel + tar.gz bundle</td>
+          <td><span class="lic lic-mit">MIT</span></td>
+          <td><code>dist/</code></td>
+          <td>KPI engine packaged as <code>teamsight-X.X.X.whl</code>; full system as <code>teamsight-complete-*.tar.gz</code></td>
+        </tr>
+        <tr>
+          <td class="tech-name">Data Backup</td>
+          <td>Bash cron + Python</td>
+          <td><span class="lic lic-internal">Internal</span></td>
+          <td><code>backup/</code> directory</td>
+          <td>Daily automated backup of KPI matrix and output CSVs. Remote full backups in <code>backup/remote_full_backups/</code></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="slide-foot">TeamSight v2.1.8 · Technology Stack · April 2026 &nbsp;|&nbsp; Slide 9 of 9</div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "default": {
+    "githubToken": "<GITHUB_TOKEN>",
+    "githubApiBaseUrl": "https://github.example.com/api/v3",
+    "batchSize": 100
+  },
+  "repositories": {
+    "ORG/REPOSITORY_NAME": {}
+  },
+  "outputFile": "output/github_commits.csv",
+  "checkpointFile": "data/fetch_checkpoint.json",
+  "exportFormat": "csv"
+}

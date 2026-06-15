@@ -1,0 +1,119 @@
+name: CD - Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      run_id:
+        description: "CI run ID to deploy from (leave blank to use latest on main)"
+        required: false
+        default: ""
+
+jobs:
+  deploy:
+    name: Deploy to Production
+    runs-on: self-hosted
+    environment: production
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install build tools
+        run: pip install build wheel setuptools
+
+      - name: Build Python wheel
+        run: python -m build --wheel
+
+      - name: Package deployment bundle
+        run: |
+          chmod +x scripts/package_complete_bundle.sh
+          scripts/package_complete_bundle.sh \
+            --target-folder /opt/teamsight/teamsight \
+            --no-prompt
+
+      - name: Set up SSH agent
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Add remote host to known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H "${{ secrets.REMOTE_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Copy bundle to remote server
+        run: |
+          BUNDLE=$(ls -1t dist/teamsight-complete-*.tar.gz | head -1)
+          BUNDLE_NAME=$(basename "$BUNDLE")
+          scp "$BUNDLE" "${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }}:/tmp/"
+          echo "BUNDLE_NAME=$BUNDLE_NAME" >> "$GITHUB_ENV"
+
+      - name: Extract & deploy bundle on remote
+        run: |
+          TARGET=/opt/teamsight/teamsight
+          ssh "${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }}" bash -s <<EOF
+            set -e
+            mkdir -p /tmp/ts_deploy
+            tar -xzf /tmp/${BUNDLE_NAME} -C /tmp/ts_deploy
+            chmod +x /tmp/ts_deploy/scripts/deploy_complete_bundle.sh
+            /tmp/ts_deploy/scripts/deploy_complete_bundle.sh \
+              --bundle /tmp/${BUNDLE_NAME} \
+              --target-folder ${TARGET} \
+              --no-prompt \
+              --install-wheel \
+              --no-shell-rc
+          EOF
+
+      - name: Rebuild frontend on remote
+        run: |
+          TARGET=/opt/teamsight/teamsight
+          ssh "${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }}" bash -s <<EOF
+            set -e
+            cd ${TARGET}/dashboard/frontend
+            rm -rf dist
+            npm run build
+            test -f dist/index.html
+            echo "Frontend build OK: \$(ls dist/assets/index-*.js 2>/dev/null | head -1)"
+          EOF
+
+      - name: Force reinstall wheel in backend venv
+        run: |
+          TARGET=/opt/teamsight/teamsight
+          ssh "${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }}" bash -s <<EOF
+            set -e
+            WHEEL=\$(ls -1t ${TARGET}/dist/teamsight-*.whl | head -1)
+            echo "Reinstalling wheel: \$WHEEL"
+            ${TARGET}/dashboard/backend/venv/bin/python3 -m pip install \
+              --no-deps --force-reinstall "\$WHEEL"
+          EOF
+
+      - name: Restart backend service
+        run: |
+          TARGET=/opt/teamsight/teamsight
+          ssh "${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }}" bash -s <<EOF
+            set -e
+            cd ${TARGET}/dashboard
+            ./manage.sh restart backend
+          EOF
+
+      - name: Verify deployment
+        run: |
+          sleep 8
+          TARGET=/opt/teamsight/teamsight
+          ssh "${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }}" bash -s <<EOF
+            cd ${TARGET}/dashboard
+            ./manage.sh status
+          EOF
+          VERSION=$(curl -sf "http://${{ secrets.REMOTE_HOST }}:8000/api/config" 2>/dev/null | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('version','unknown'))" 2>/dev/null || echo "unknown")
+          echo "Deployed version: $VERSION"
+
+      - name: Clean up remote bundle
+        if: always()
+        run: |
+          ssh "${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }}" \
+            "rm -rf /tmp/${BUNDLE_NAME} /tmp/ts_deploy" || true

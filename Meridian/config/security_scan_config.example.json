@@ -1,0 +1,41 @@
+{
+  "credentials": {
+    "username": "<SECURITY_SCAN_USERNAME>",
+    "password": "<SECURITY_SCAN_PASSWORD>"
+  },
+  "nexus_domains": {
+    "dcem": "https://nexus-dcem.example.com:8443",
+    "oosm": "https://nexus-oosm.example.com:8443"
+  },
+  "projects": [
+    {
+      "id": "sample_project",
+      "name": "Sample Project",
+      "teams": [
+        "TEAM_NAME"
+      ],
+      "reports": [
+        {
+          "type": "sast",
+          "url": "https://nexus.example.com/repository/sample/sast.html",
+          "filename": "sample_sast.html"
+        },
+        {
+          "type": "sca",
+          "url": "https://nexus.example.com/repository/sample/sca.html",
+          "filename": "sample_sca.html"
+        },
+        {
+          "type": "dast",
+          "url": "https://nexus.example.com/repository/sample/dast.html",
+          "filename": "sample_dast.html"
+        },
+        {
+          "type": "mend",
+          "url": "https://nexus.example.com/repository/sample/mend.pdf",
+          "filename": "sample_mend.pdf"
+        }
+      ]
+    }
+  ]
+}

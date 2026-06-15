@@ -1,0 +1,309 @@
+Index,Role,KPP Goals,Measurement Criteria,Tool,Measure,Type,Aggregation Type,Weekly Target,Quarterly Target,Annual Target,Goal Type,Prorate
+k1,Developer,Code Efficiency: Write efficient and optimized code.,Code Efficiency: Measured through usage of GenAI tools,Copilot Metrics,Copilot LOC,NG,ANG,40,450,1800,Hygiene,Yes
+k2,All,Bug Resolution Time: Reduce the time taken to fix bugs.,Bug Resolution Time: Average time taken to resolve reported bugs (Team Level),JIRA,Bugs: Created -> Done : Average Number of days (Product Level),NL,ANL,10,5,20,Hygiene,No
+k3,Developer,Feature Implementation: Deliver new features within deadlines.,Feature Implementation: Number of features delivered on time.,JIRA,Story Points ,NG,ANG,4,45,180,Output,Yes
+k4,Developer,Code Quality: Maintain high code quality and readability.,"Code Quality: Code review scores, adherence to coding standards.",GitHub,Review comments received <,NL,ANL,25,125,500,Quality,Yes
+k5,All,Learning Curve: Quickly adapt to new technologies and tools.,"Learning Curve: Progress in learning new technologies, assessed through quizzes and project involvement.",Trainings,Number of trainings,NG,ANG,1,6.25,25,Input,Yes
+k6,Junior Software Engineer,Boilerplate Code Generation: Efficiently generate boilerplate code.,Boilerplate Code Generation: Time taken to set up initial project files.,Copilot Metrics,Copilot LOC,NG,ANG,80,1250,5000,Hygiene,Yes
+k7,Junior Software Engineer,Task Completion: Complete assigned tasks with minimal errors.,Task Completion: Number of tasks completed correctly on the first attempt.,JIRA,Story Points ,NG,ANG,4,45,180,Output,Yes
+k8,Software Engineer,"Code Quality: Write clean, maintainable code.",Code Quality: Code review scores and adherence to best practices.,GitHub,Review comments received <,NL,ANL,25,125,500,Quality,Yes
+k9,Developer,Debugging Skills: Effectively identify and resolve bugs.,Debugging Skills: Time taken to debug and fix issues.,JIRA,Average Dev Cycle time for Bugs (Individual Contributions),NL,ANL,10.0,10.0,10.0,Output,No
+k10,Software Engineer,Refactoring: Improve existing codebase without introducing new bugs.,Refactoring: Number of successful refactorings without regressions.,GitHub,Modified LOC,,,25,375,1500,,Yes
+k11,Tech Lead,Team Guidance: Provide effective technical guidance to the team.,Team Guidance: Team’s performance and feedback.,Copilot tracker,Help instances,NG,ANG,1,12,48,,Yes
+k12,Tech Lead,Code Review: Ensure high code quality across the team.,Code Review: Quality and frequency of code reviews.,GitHub,Number of reviews where approver,NG,ANG,1,12.5,50,Hygiene,Yes
+k13,Tech Lead,Project Delivery: Ensure projects are delivered on time.,Project Delivery: Timeliness of project delivery.,JIRA, SP delivered/team member (RM Heirarchy),NG,ANG,3.8,35,140,Output,Yes
+k14,Tech Lead,Planning: Develop detailed plans and deliver,Adherence to release plans.,JIRA,Sprint content as per plan (Team Delayed SP <),NL,ANL,0,5,20,Hygiene,Yes
+k15,Integration Tester,Test Coverage: Ensure comprehensive test coverage.,Test Coverage: Percentage of code covered by tests.,Copilot tracker,# New Tests / KLOC committed (Team),PG,APG,8,1.5,6,Quality,No
+k16,Integration Tester,Bug Identification: Efficiently identify bugs before release.,Bug Identification: Number of bugs found during testing phase.,JIRA,Bugs detected >,NG,ANG,5,30,120,Output,Yes
+k17,Integration Tester,Automation: Increase the number of automated tests.,Automation: Ratio of automated tests to manual tests.,CICD report,# Automation tests,NG,ANG,9,107.5,430,Hygiene,Yes
+k18,Integration Tester,Documentation: Maintain clear and thorough documentation.,Documentation: Quality and completeness of documentation.,JIRA ,JIRA task for document (Test Plan/Other),NG,ANG,1,6,24,Hygiene,Yes
+k19,System Tester,Test Coverage: Ensure comprehensive test coverage.,Test Coverage: Percentage of code covered by tests.,GitHub,# New Tests / KLOC committed (Team),PG,APG,5,1.25,5,,No
+k20,System Tester,Bug Identification: Efficiently identify bugs before release.,Bug Identification: Number of bugs found during testing phase.,JIRA,Bugs detected >,NG,ANG,3,18.75,75,,Yes
+k21,System Tester,Automation: Increase the number of automated tests.,Automation: Ratio of automated tests to manual tests.,CICD report,#System Automation tests,NG,ANG,1,12,48,,Yes
+k22,System Tester,Test Documentation: Maintain clear and thorough test documentation.,Test Documentation: Quality and completeness of test documentation.,JIRA,JIRA task for test plan,NG,ANG,1,6,24,,Yes
+k23,QA Engineer,Test Coverage: Ensure comprehensive test coverage.,Test Coverage: Percentage of code covered by tests.,Copilot tracker,# New Tests / KLOC committed (Team),PG,APG,8,1.5,6,Hygiene,No
+k24,QA Engineer,Bug Identification: Efficiently identify bugs before release.,Bug Identification: Number of bugs found during testing phase.,JIRA,Bugs detected >,NG,ANG,5,30,120,Output,Yes
+k25,QA Engineer,Automation: Increase the number of automated tests.,Automation: Ratio of automated tests to manual tests.,CICD report,# Automation tests added,NG,ANG,5,30,120,,Yes
+k26,QA Engineer,Test Documentation: Maintain clear and thorough test documentation.,Test Documentation: Quality and completeness of test documentation.,JIRA,JIRA task for test plan,NG,ANG,1,6,24,,Yes
+k27,DevOps Engineer,CI/CD Pipeline Efficiency: Maintain efficient CI/CD pipeline,CI/CD Pipeline Efficiency: Deployment frequency and success rate.,CICD report,Successful Build/Total Automated Builds,PG,APG,90%,0.225,90%,Quality,No
+k28,DevOps Engineer,Infrastructure Reliability: Ensure high availability of infrastructure.,Infrastructure Reliability: Uptime and failure rate.,Copilot tracker,Env Issues faced (Product Level) <=,NL,ANL,10,125,500,Hygiene,Yes
+k29,DevOps Engineer,Automation: Automate repetitive tasks.,Automation: Number of automated tasks versus manual interventions.,CICD report,# Deployment automation,NG,ANG,1,5,20,Hygiene,Yes
+k30,DevOps Engineer,Security Compliance: Ensure systems meet security compliance.,Security Compliance: Number of security incidents and compliance audits.,"AppScan, Whitesource, Sonar, DAST",# Successful Scan runs,PG,APG,2,20,80,Output,Yes
+k31,Database Administrator,Query Performance: Optimize database queries.,Query Performance: Query execution time and Person usage.,Testcase run,Increase in time taken for reresentative test <,NL,APL,5%,5%,5%,Quality,No
+k32,Database Administrator,Data Integrity: Ensure data integrity and reliability.,Data Integrity: Number of data integrity issues found.,JIRA,# Open Bugs tagged Database,NL,ANL,0,1,4,Quality,Yes
+k33,Database Administrator,Backup and Recovery: Ensure regular backups and recovery plans.,Backup and Recovery: Backup success rate and recovery time.,Manual Report,# Backups,NG,,1,6,24,Hygiene,Yes
+k34,Database Administrator,Database Maintenance: Regularly maintain and update databases.,Database Maintenance: Frequency and quality of maintenance activities.,Manual Report,# Maintenance activities >,NG,,1,6,24,Hygiene,Yes
+k35,Security Engineer,Vulnerability Management: Identify and mitigate security vulnerabilities.,Vulnerability Management: Number of vulnerabilities identified and fixed.,"AppScan, Whitesource","Number of Appscan, Whitesource runs",PG,APG,2,12,48,,Yes
+k36,Security Engineer,Incident Response: Effectively respond to security incidents.,Incident Response: Response time and effectiveness of incident resolution.,"CVE, JIRA (Secutiry tagged)",Average time to assignment <,NL,ANL,1,0.25,1,,No
+k37,Security Engineer,Security Training: Conduct regular security training sessions.,Security Training: Number and quality of training sessions.,Manual,# Trainings,NG,ANG,1,6.25,25,,Yes
+k38,Security Engineer,Security issues in product,Security issues in product,JIRA,# Defects tagged Security,NL,ANL,1,6,24,,Yes
+k39,Frontend Engineer,UI/UX Quality: Ensure high-quality user interfaces and experiences.,UI/UX Quality: User feedback and UI/UX metrics.,JIRA,# Bugs for design (bug-ui-functional) Product level <,NL,ANL,1,12,48,Quality,Yes
+k40,Frontend Engineer,Responsiveness: Ensure responsive design across devices.,Responsiveness: Cross-device compatibility and performance metrics.,JIRA,# UI bugs <,NL,ANL,3,30,120,Quality,Yes
+k41,Frontend Engineer,Code Efficiency: Write efficient and maintainable frontend code.,Code Efficiency: Code review scores and performance benchmarks.,JIRA,# UI Performance issues <,NL,ANL,1,2.5,10,Quality,Yes
+k42,Frontend Engineer,Collaboration: Work effectively with designers and backend developers.,Collaboration: Feedback from team members and project outcomes.,Copilot tracker,# Help instances,NG,ANG,1,12,48,Hygiene,Yes
+k43,Product Manager,Feature Delivery: Ensure timely delivery of product features.,Feature Delivery: Timeliness and completeness of feature delivery.,JIRA,Actual Story Points per team member,NG,ANG,4,45,180,,No
+k44,Product Manager,Market Fit: Ensure product features meet market needs.,Market Fit: User feedback and market analysis.,Manual,Customer adoption,NG,ANG,1,1,4,,Yes
+k45,Product Manager,Team Collaboration: Foster effective collaboration within the team.,Team Collaboration: Team feedback and project success rates.,Manual,#Epics delivered per product,NG,ANG,3,35,140,,Yes
+k46,Scrum Master,Roadmap Planning: Create and maintain a clear product roadmap.,Roadmap Planning: Accuracy and effectiveness of the roadmap.,JIRA,#. Future sprints defined,NG,,2,0.5,2,Hygiene,Yes
+k47,Architect,System Design: Create scalable and robust system architectures.,System Design: Scalability and robustness of designed systems.,"Manual, JIRA",#Bugs needing Design/Arch change less than,NL,ANL,1,12,48,Quality,Yes
+k48,Architect,Technology Strategy: Develop long-term technology strategies.,Technology Strategy: Alignment with business goals and technology trends.,Manual,# 3PP changes (Whitesource Runs) > ,PG,APG,90%,95%,95%,Hygiene,No
+k49,Architect,Code Quality: Ensure high standards of code quality in architecture.,Code Quality: Code review and architecture assessment scores.,GitHub,Number of reviews done,NG,ANG,3,36,144,Quality,Yes
+k50,Architect,Mentorship: Guide and mentor technical staff.,Mentorship: Growth and feedback of mentees.,Copilot Tracker,Help instances,NG,ANG,1,12,48,Hygiene,Yes
+k51,Deployment Engineer,Deployment Success Rate: Ensure successful deployments.,Deployment Success Rate: Percentage of successful deployments.,GitHub,Automation Pass rate on deployment,PG,APG,95%,0.2375,95%,Quality,No
+k52,Quarterly Score,Score,Score,Computation,Computation,NG,,75,22.5,90,,Yes
+k53,Deployment Engineer,Downtime Reduction: Minimize deployment-related downtime.,Downtime Reduction: Downtime metrics and incident reports.,CICD Tracker,Health Check failed TCs <=,NL,ANL,0,10,40,Quality,Yes
+k54,Deployment Engineer,Environment Consistency: Maintain consistency across deployment environments.,Environment Consistency: Environment audit results.,CICD Report,CICD Deployment success rate >=,PG,APG,90%,0.225,90%,Quality,No
+k55,Critical KPI,UT Sufficiency,UT created per KLOC,JIRA/Tracker,k214 * 1000 / k227,NG,ANG,18,18,18,Hygiene,No
+k56,UI Developer,Implementation efficiency,Speed of development,JIRA,#Screens developed,NG,ANG,1,7.5,30,Output,Yes
+k57,UI Developer,Implement responsive design,Reduction in UI-specific bugs reported by users or testers,JIRA,#Open Bugs attributable to  UI (Snapshot) <,NL,ANL,5,12,48,Quality,Yes
+k58,UI Developer,Consistency: Ensure design consistency across the product.,Consistency: Consistency metrics and design audit results.,Manual,# 3PP changes (Whitesource Runs) > ,NG,APG,100%,95%,95%,,No
+k59,UI Designer,Design Quality: Create high-quality and user-friendly designs.,Design Quality: User feedback and design review scores.,JIRA,#Bugs attributable to UI design <,NL,ANL,2,12,48,Quality,Yes
+k60,UI Designer,UI/UX Quality: Ensure high-quality user interfaces and experiences.,UI/UX Quality: User feedback and UI/UX metrics.,JIRA,# Bugs for design (bug-ui-functional) Product level <,NL,ANL,5,12,48,Quality,Yes
+k61,UI Designer,Innovation: Incorporate innovative design trends.,Innovation: Adoption rate of new design trends.,Manual,Feedback,F,,Feedback,Feedback,Feedback,,Yes
+k62,UI Designer,Consistency: Ensure design consistency across the product.,Consistency: Consistency metrics and design audit results.,Scan report,# 3PP changes (Whitesource Runs) > ,NG,ANG,1,6,24,,Yes
+k63,Tech Writer,Documentation Quality: Produce clear and comprehensive documentation.,Documentation Quality: User feedback and review scores.,JIRA,# Bugs on documentation,NL,ANL,1,12,48,,Yes
+k64,Tech Writer,Timeliness: Deliver documentation on time.,Timeliness: Documentation delivery timelines.,JIRA,Delayed SP,NL,ANL,0,3,12,,Yes
+k65,Tech Writer,Accuracy: Ensure documentation accuracy and relevance.,Accuracy: Number of errors and updates required.,JIRA,Review comments <,NL,ANL,3,12.5,50,,Yes
+k66,Tech Writer,User Engagement: Increase user engagement with documentation.,User Engagement: Usage metrics and user feedback.,Manual,Feedback,F,,OK,OK,OK,,Yes
+k67,System Engineer,System Reliability: Ensure high system reliability and uptime.,System Reliability: Uptime metrics and incident reports.,JIRA,JIRA related to reliability (Product),NL,ANL,0,1,4,,Yes
+k68,System Engineer,Performance Optimization: Optimize system performance.,Performance Optimization: Performance benchmarks and Person usage.,JIRA,# Open Bugs tagged to performance,NL,ANL,0,1,4,,Yes
+k69,System Engineer,Automation: Automate system management tasks.,Automation: Number of automated tasks versus manual interventions.,JIRA,# Story points related to application management,NG,ANG,2,20,80,,Yes
+k70,System Engineer,Security Compliance: Ensure systems meet security compliance.,Security Compliance: Number of security incidents and compliance audits.,"JIRA, GitHub","#successful scans run ( Appscan, Whitesource, Sonar at Product level)",NG,ANG,2,20,80,,Yes
+k71,Performance Engineer,Performance Testing: Conduct thorough performance testing.,Performance Testing: Number and quality of performance tests conducted.,"JIRA (Performance tagged), CICD Report", # Failed performance runs,PL,APL,20%,10%,5%,,No
+k72,Performance Engineer,Optimization: Identify and optimize performance bottlenecks.,Optimization: Performance improvements and benchmark results.,"JIRA (Performance tagged), CICD Report",Related Story Points,NG,ANG,1,6,24,,Yes
+k73,Performance Engineer,Monitoring: Implement effective performance monitoring.,Monitoring: Monitoring coverage and accuracy.,GitHub,# Performance runs,NG,ANG,1,6,24,,Yes
+k74,Critical KPI,Compliance with Development Environment,Regular upgrade to latest UDE version,UDE,Median UDE update delay,NL,ANL,8,8,8,Hygiene,Yes
+k75,Trainee,Code Efficiency: Write efficient and optimized code.,Code Efficiency: Measured through code reviews and performance benchmarks.,Copilot Metrics,Copilot LOC,NG,ANG,40,450,1800,,Yes
+k76,Trainee,Weekly Evaluation,Quiz score,Form,# Assessment Reports,NG,ANG,75%,80%,80%,,No
+k77,Security Analyst,Compliance: Ensure Product adherence to security policies and regulations.,Compliance: PEN Test results.,JIRA,Label penetration tagged JIRA (Product) <=,NL,ANL,0,1,4,,Yes
+k78,Trainee,New Technology Training,Number of tranings completed,Copilot tracker,Number of tranings completed,NG,ANG,1,6,24,,Yes
+k79,Incident Response Team,Response Time: Minimize incident response time.,Response Time: Average incident response time.,TAC Portal,Average Assignment delay (Days) <=,NL,ANL,1,0.25,1,Hygiene,No
+k80,Incident Response Team,Incident Resolution: Effectively resolve security incidents.,Incident Resolution: Number of incidents resolved successfully.,TAC Portal,% Closed within SLA,PG,,100%,0.2375,95%,Quality,No
+k81,Incident Response Team,Documentation: Maintain detailed incident reports and documentation.,Documentation: Quality and thoroughness of incident reports.,Wiki,Feedback on Reports,F,,OK,OK,OK,,Yes
+k82,Incident Response Team,Night Shift,#Night shifts,Manual,Manual report,NG,,2,22.5,90,,Yes
+k83,,Active participation in reviews,Active participation in reviews - Number ,GitHub,# Reviews actively participated,NG,ANG,4,48,192,,Yes
+k84,Research,Team Guidance: Provide effective technical guidance to the team.,Team Guidance: Team’s performance and feedback.,Copilot tracker,Help instances in Scrum Team,NG,ANG,5,30,120,,Yes
+k85,Research,Planning: Develop detailed plans and deliver,Adherence to release plans.,JIRA,Sprint content as per plan (Scrum Team Delayed SP <),NL,,0,5,20,,Yes
+k86,Research,Research Tasks,Contribution to reseearch tasks score,Manual,#Score,NG,ANG,1,6.25,25,,Yes
+k87,IoT Developer,Device Integration: Successfully integrate IoT devices.,Device Integration: Number of successfully integrated devices.,JIRA,# EPICs for device integration,NG,,1,1,4,,Yes
+k88,IoT Developer,Code Efficiency: Write efficient code for IoT devices.,Code Efficiency: Performance and Person usage of IoT devices.,Copilot Metrics,Copilot LOC,NG,,40,450,1800,,Yes
+k89,IoT Developer,Security: Ensure IoT devices are secure.,Security: Number of security vulnerabilities found and fixed.,JIRA,# Bugs tagged to security <=,NL,,0,1,4,,Yes
+k90,Program Manager,Release Delivery,Succesful releases,Manual,ELB,F,ANG,0,0.25,1,,Yes
+k91,Embedded Systems Engineer,Code Efficiency: Write optimized code for embedded systems.,Code Efficiency: Performance benchmarks and Person usage.,JIRA,# BugsTagged performance,NL,ANL,1,5,20,,Yes
+k92,Embedded Systems Engineer,Reliability: Ensure the reliability of embedded systems.,Reliability: Uptime and failure rates of embedded systems.,JIRA,# Bugs,NL,ANL,2,18.75,75,,Yes
+k93,Embedded Systems Engineer,Debugging: Effectively debug and resolve issues in embedded systems.,Debugging: Time taken to debug and fix issues.,JIRA,Average Dev Cycle time for Bugs (Individual Contributions),NL,ANL,10,2.5,10,,No
+k94,Embedded Systems Engineer,Documentation: Maintain detailed documentation for embedded systems.,Documentation: Quality and completeness of documentation.,Manual,# document jira done,NG,ANG,1,12,48,,Yes
+k95,Network Engineer,Network Performance: Optimize network performance and reliability.,"Network Performance: Network uptime, latency, and throughput.",,Successful performance runs,NG,,1,12,48,,Yes
+k96,Network Engineer,Configuration Management: Maintain accurate network configuration.,Configuration Management: Accuracy and completeness of configuration records.,,# document jira done,NG,,1,12,48,,Yes
+k97,Network Engineer,Security: Ensure network security and compliance.,Security: Number of security incidents and compliance audit results.,,# Security related JIRA <,NL,,1,5,20,,Yes
+k98,Network Engineer,Automation: Automate network configuration and management tasks.,Automation: Number of automated tasks versus manual interventions.,,# Automation ,NG,,1,10,40,,Yes
+k99,Mobile Developer,App Performance: Ensure high performance of mobile applications.,App Performance: Performance benchmarks and user feedback.,JIRA,# BugsTagged performance,NL,ANL,1,5,20,,Yes
+k100,Mobile Developer,"Code Quality: Write clean, maintainable code for mobile apps.",Code Quality: Code review scores and adherence to best practices.,GitHub,# Review comments received <,NL,ANL,5,60,240,,Yes
+k101,Mobile Developer,Feature Delivery: Deliver new features on time.,Feature Delivery: Number of features delivered on time.,JIRA,Delivered Story Points >=,NG,ANG,4,48,192,,Yes
+k102,Mobile Developer,User Experience: Ensure a positive user experience in mobile apps.,Design Quality: User feedback and design review scores.,JIRA,#Bugs attributable to UI design <,NL,ANL,2,12,48,,Yes
+k103,Research Architect,Code Quality: Ensure high standards of code quality in architecture.,Number of research reviews done,JIRA,Number of reviews done,NG,ANG,1,12.5,50,,Yes
+k104,Research Architect,Mentorship: Guide and mentor technical staff.,Help instances,Copilot tracker,Help instances in Scrum Team,NG,ANG,5,30,120,,Yes
+k105,Research Architect,Identify or discover new technologies / frameworks and share,Research Technologies,JIRA,research-new-tech-analysis,NG,ANG,1,6,24,Input,Yes
+k106,Research Architect,Identify any bottlenecks or improvements in existing design and implementation,Research existing design & implementation,JIRA,research-design-review,NG,ANG,1,6,24,,Yes
+k107,Research Architect,Develop and Present POCs,POCs,JIRA,research-poc,NG,ANG,1,6,24,Output,Yes
+k108,Senior Engineer - Research,Research Depth & Tech Evaluation,"Ability to explore, compare, and document multiple algorithms, tech stacks, or tools for solving a problem",JIRA,research-core-analysis,NG,ANG,1,2.5,10,,Yes
+k109,Senior Engineer - Research,System Design: Create new/Identify/Upgrade existing scalable and robust system architectures,Clarity and quality of system design documents with technical reasoning behind chosen algorithms and stacks.,JIRA,research-design-review,NG,ANG,1,1.25,5,,Yes
+k110,Senior Engineer - Research,POC Delivery:Develop and Present POCs,SP delivered,JIRA,research-poc,NG,ANG,1,2.5,10,,Yes
+k111,Senior Engineer - Research,Coding Efficiency: Code generation as part of POCs,Copilot LOC,JIRA,k1- Copilot LOC,NG,ANG,40,400,1600,,Yes
+k112,Senior Engineer - Research,Documentation & Knowledge Sharing,Quality of technical documentation and internal presentations of R&D findings and PoCs.,JIRA,research-doc,NG,ANG,1,2.5,10,,Yes
+k113,Senior Engineer - Research,Team Guidance: Provide effective technical guidance to the team.,Help instances,Copilot tracker,Help instances in Scrum Team,NG,ANG,1,12,48,,Yes
+k114,Junior Software Engineer,Induction,Induction completion,Manual,Test Score,NG,ANG,65,65,65,Quality,Yes
+k115,Developer - Research,Debugging Skills: Effectively identify and resolve bugs.,Debugging Skills: Time taken to debug and fix issues.,JIRA,research-core-debug,NG,ANG,1,2.5,10,Quality,Yes
+k116,Developer - Research,Code Quality: Maintain high code quality and readability.,"Code Quality: Code review scores, adherence to coding standards.",JIRA,research-code-review,NG,ANG,1,12.5,50,Hygiene,Yes
+k117,Developer - Research,UT creation,Number per week,JIRA,research-core-test,NG,ANG,1,12.5,50,Hygiene,Yes
+k118,Developer - Research,JIRA story points complete,Story Points completed,JIRA,#Story points,NG,ANG,4,50,200,Output,Yes
+k119,Backend Engineer,API Development: Develop efficient and scalable APIs.,API Development: Performance benchmarks and user feedback.,JIRA,#Story points,NG,ANG,4,48,192,Output,Yes
+k120,Backend Engineer,Database Management: Efficiently manage backend databases.,Database Management: Query performance and data integrity metrics.,JIRA,# BugsTagged DB performance (Individual) <,NL,ANL,1,5,20,Quality,Yes
+k121,Backend Engineer,Performance Optimization: Optimize backend performance. (Scrum),Performance Optimization: Performance improvements and benchmarks. (Scrum),JIRA,# BugsTagged performance (Scrum Team) <,NL,ANL,1,6,24,Quality,Yes
+k122,Backend Engineer,SAST Gating issues (Product),SAST (Critical + High),CICD Tracker,SAST (Critical + High) Product <=,NL,ANL,0,1.25,5,Quality,No
+k123,Full Stack Developer,Frontend and Backend Development: Develop both frontend and backend components.,Frontend and Backend Development: Performance and quality metrics of both components.,"GitHub, JIRA",Assigned tasks,NG,,2,12,48,Input,Yes
+k124,Full Stack Developer,Feature Implementation: Deliver new features within deadlines.,Feature Implementation: Number of features delivered on time.,JIRA,Story Points ,NG,ANG,1,5,20,Output,Yes
+k125,Full Stack Developer,Code Quality: Maintain high code quality and readability.,"Code Quality: Code review scores, adherence to coding standards.",GitHub,Review comments received <,NL,ANL,5,50,200,Quality,Yes
+k126,Full Stack Developer,"Collaboration: Work effectively with designers, product managers, and other developers.",Collaboration: Feedback from team members and project outcomes.,Copilot tracker,Help instances,NG,ANG,1,12,48,Hygiene,Yes
+k127,Test Engineer,Test Plan Creation: Develop comprehensive test plans.,Test Plan Creation: Quality and completeness of test plans.,JIRA ,JIRA task for test plan,NG,ANG,1,6,24,,Yes
+k128,Test Engineer,Test Execution: Efficiently execute test plans and report results.,Test Execution: Number of tests executed and defect detection rate.,CICD report,Deployment pass percent (Automation passs%),PG,APG,90%,95%,95%,,No
+k129,Test Engineer,Automation: Increase the automation of test cases.,Automation: Ratio of automated tests to manual tests.,CICD report,# Tests added / KLOC added,PG,APG,9,4.5,18,,No
+k130,Test Engineer,Bug Reporting: Provide clear and detailed bug reports.,Bug Reporting: Quality and clarity of bug reports.,JIRA,#Bugs referred back for information <,NL,ANL,1,12,48,,Yes
+k131,Release Engineer,Build Plan and Success,Release Planning: adherence to release plans.,CICD report,Successful Build/Total Automated Builds,PG,APG,100%,95%,95%,,No
+k132,Release Engineer,Deployment Success Rate: Ensure successful software releases.,Deployment Success Rate: Percentage of successful releases.,CICD report,Deployment pass (Automation pass %),PG,APG,90%,95%,95%,,No
+k133,Release Engineer,Rollback Procedures: Maintain effective rollback procedures.,Rollback Procedures: Number and effectiveness of rollback procedures.,Manual,Manual,F,,Feedback,Feedback,Feedback,,Yes
+k134,Release Engineer,Collaboration: Work effectively with development and QA teams.,Collaboration: Feedback from team members and release outcomes.,Copilot tracker,Help instances,F,ANG,1,12,48,,Yes
+k135,Program Manager,Release Planning: Develop detailed release plans.,Maintaining release plans.,JIRA,# Sprints planned ahead,NG,,2,0.5,2,,Yes
+k136,Program Manager,Planning: Develop detailed plans and deliver,Adherence to release plans.,JIRA,Sprint content as per plan (Team Delayed SP <),NL,,0,5,20,Output,Yes
+k137,Program Manager,Team Collaboration: Foster effective collaboration within the team.,Team Collaboration: Team feedback and project success rates.,Copilot tracker,Help instances,NG,ANG,1,12,48,Hygiene,Yes
+k138,Program Manager,Person Utilization Rate,Story Points per sprint per Person (Product Team),JIRA,Story Points per sprint per Person (Product Team),RG,,3.8,8,8,Input,No
+k139,Developer,UT creation,#UT cases,Copilot tracker,Number of UT cases,NG,ANG,10,60,240,Duplicated,Yes
+k140,FPGA Design Engineer,Code Generation Speed,Time saved in writing HDL code,GitHub,GitLOC productivity per day >=,NG,,20,5,20,,No
+k141,FPGA Design Engineer,Code Quality (Defect Density Team Level) k16 k227 based,Bug Density,JIRA,"Bugs per 1,000 lines of code (KLOC) (Team level)",NL,,8,2,8,,No
+k142,FPGA Design Engineer,Person Optimization,Improvement in FPGA Person usage,JIRA,Relevant defects <=,NL,,1,1.25,5,,Yes
+k143,Embedded Software Engineer,Development Time Reduction,Productivity,JIRA,Story points delivered >=,NG,ANG,4,48,192,,Yes
+k144,Embedded Software Engineer,Error Rate,Number of bugs or issues per lines of code,"JIRA, GitHub","Bugs per 1,000 lines of code (KLOC)",NL,,8,2,8,,No
+k145,Embedded Software Engineer,Code Coverage,Percentage of code covered by automated tests,CICD report,Percentage (%),PG,,90%,95%,95%,,No
+k146,DSP Algorithm Engineer,Algorithm Implementation Speed,Time saved in developing and testing algorithms,GitHub,LOC productivity per day >=,NG,,20,5,20,,Yes
+k147,DSP Algorithm Engineer,Performance Improvement,Efficiency of the generated code,JIRA,Bugs related to performance <=,NL,,1,5,20,,Yes
+k148,DSP Algorithm Engineer,Code Reusability,Generated code,Copilot tracker,Copilot LOC >=,NG,,50,600,2400,,Yes
+k149,RF/Microwave Engineer,Simulation Setup Time,Reduction in time to set up and run RF simulations,Manual,Hours or days per simulation,NL,,1,0.25,1,,No
+k150,RF/Microwave Engineer,Test Automation Efficiency,Number of automated test scripts generated or improved,Copilot tracker,Number of scripts,NG,,4,48,192,,Yes
+k151,RF/Microwave Engineer,Accuracy of Calculations,Reduction in errors in RF calculations,JIRA,Bugs related to RF <=,NL,,1,5,20,,Yes
+k152,System Architect,Documentation Quality,Clarity and completeness of generated design documents,Feedback,"Qualitative assessment (e.g., 1-5 scale or user feedback)",F,,Feedback,Feedback,Feedback,,Yes
+k153,System Architect,Integration Time,Reduction in time for hardware-software integration,JIRA,Story points per sprint for integration <=,NL,,4,2,8,,No
+k154,System Architect,Design Consistency,Number of design inconsistencies or architectural flaws,JIRA,Number of inconsistencies or flaws per project,NL,,0,3.75,15,,Yes
+k155,Verification and Validation Engineer,Test Development Time,Reduction in time to create and execute tests,JIRA,Story points per sprint >=,NG,ANG,4,2,8,,No
+k156,Verification and Validation Engineer,Test Coverage,Improvement in code and functional coverage metrics,CICD report,# Automated runs v/s Manual greater than,PG,,90%,95%,90%,,No
+k157,Verification and Validation Engineer,Bug Detection Rate,Number of bugs detected ,JIRA,Bugs raised >=,NG,ANG,3,30,120,,Yes
+k158,Hardware Engineer (PCB Design),Design Automation Efficiency,Time saved in PCB layout and validation,JIRA,Story points related to PCB design >=,NG,,4,48,192,,Yes
+k159,Hardware Engineer (PCB Design),Signal Integrity Metrics,Improvement in signal integrity,,dB reduction in crosstalk or signal loss,NG,,,0,,,Yes
+k160,Hardware Engineer (PCB Design),Design Accuracy,Reduction in design errors or rework required,,Number of errors or rework instances per design,NL,,,0,,,Yes
+k161,Project Manager,Planning Efficiency,Time saved in project planning and documentation,,Documentation quantum,RG,ANG,1,10,40,,Yes
+k162,Project Manager,Task Completion Rate,Percentage of tasks completed on time,JIRA,Percentage (%),PG,,100%,95%,95%,,No
+k163,Project Manager,Risk Mitigation Effectiveness,Reduction in project risks and issues,,Number of risks mitigated or issues resolved per project,NG,,,0,,,Yes
+k164,Quality Assurance (QA) Engineer,Test Plan Quality,Completeness and clarity of generated test plans,,"Qualitative assessment (e.g., 1-5 scale or user feedback)",F,,,0,,,Yes
+k165,Quality Assurance (QA) Engineer,Automation Coverage,Percentage of tests automated using generated scripts,,Percentage (%),PG,,100%,95%,95%,,No
+k166,Quality Assurance (QA) Engineer,Defect Rate,Number of defects found per lines of code reviewed,,"Defects per 1,000 lines of code (KLOC)",NG,,,0,,,No
+k167,Field Application Engineer (FAE),Documentation Clarity,Feedback on clarity and usefulness of generated documentation,,Bugs on documentation,NL,ANL,0,6,24,,Yes
+k168,Field Application Engineer (FAE),Support Efficiency,Time saved in customer support interactions,,Minutes or hours per support case,NG,,,0,,,Yes
+k169,Field Application Engineer (FAE),Customer Satisfaction,Improvement in customer satisfaction scores,,Percentage (%) or score on a predefined scale,PG,,,0,,,Yes
+k170,Documentation Specialist,Documentation Speed,Time saved in creating and updating documents,,Hours or days per document,NG,,,0,,,No
+k171,Documentation Specialist,Content Quality,Clarity and accuracy of generated content,,"Qualitative assessment (e.g., 1-5 scale or user feedback)",F,,,0,,,Yes
+k172,Documentation Specialist,User Feedback,Satisfaction level of end-users with the documentation provided,,Percentage (%) or score on a predefined scale,PG,,,0,,,Yes
+k173,Integration Tester,User Story,JIRA story points complete,JIRA,Story Points completed,NG,ANG,4,48,192,Output,Yes
+k174,Support Lead,Customer Incident Management,Number of tickets worked on,TAC Portal,Number of tickets (TAC workgroup),NG,ANG,2,11.25,45,,Yes
+k175,Support Lead,Customer Defects Management (Team),Customer Defects handled (Team),TAC Portal,Customer Defects handled (Team),NG,ANG,5,60,240,,Yes
+k176,Support Lead,New Feature Analysis / Enhancement (Custom Product Config),Number of tickets worked on,TAC Portal,Number of tickets worked on (Enhancements),NG,ANG,1,1.5,6,,Yes
+k177,Support Lead,New Customer Enablement (RFP Response),RFP/Cutomer requirement analysis handled,JIRA,RFP/Cutomer requirement analysis handled,NG,,1,1,4,,Yes
+k178,Support Lead,Mentoring Others,Help Instances,Copilot tracker,Help Instances,NG,ANG,1,6.25,25,,Yes
+k179,Developer - Support phase,Customer Incident Management /Product Configuration Changes / Product Debugging,Number of tickets worked on,TAC Portal,Number of tickets (incidentSource=Production),NG,ANG,1,15,60,Output,Yes
+k180,Developer - Support phase,Product Installation,Number of tickets worked on,TAC Portal,"Number of tickets (resolutionType=resolutionType=Migration, Installation or Update, other relevant)",NG,ANG,1,1,4,Output,Yes
+k181,Developer - Support phase,Device Interop / PoC Support / Other,Number of tickets worked on,TAC Portal,Number of tickets worked on (Interop),NG,ANG,1,1,4,Output,Yes
+k182,Developer - Support phase,New Technology Training,Number of tranings completed,Copilot tracker,Number of tranings completed,NG,ANG,1,2,6,Hygiene,Yes
+k183,DBA-UDM,Table purging,Number of tickets worked on,TAC Portal,Number of tickets worked on,NG,ANG,1,1.25,5,Output,Yes
+k184,DBA-UDM,DB support for maintanace,Number of tickets tagged database,TAC Portal,Number of tickets tagged database,NG,ANG,1,2.5,10,Output,Yes
+k185,Incident Response UDM,Monitor the customer environment,Number of tickets worked on,TAC Portal,Number of tickets (underlyinCause=Monitoring),NG,ANG,1,3,12,Output,Yes
+k186,Incident Response UDM,Troubleshooting/Production call support,Number of tickets worked on,TAC Portal,Number of tickets (incidentSource=Production),NG,ANG,1,10,40,Output,Yes
+k187,Incident Response UDM,"Adhoc (UDM installation, Migration)",Number of tickets worked on,TAC Portal,"Number of tickets (resolutionType=rMigration, Installation or Update, other relevant)",NG,ANG,1,1,4,Output,Yes
+k188,Incident Response UDM,Mentoring new joinee,Help Instances,Copilot tracker,Help Instances,NG,ANG,1,3,12,Hygiene,Yes
+k189,Incident Response UDM,New Technology Training,Trainings completed,HCL Portal,Form Response,NG,ANG,1,3,12,Hygiene,Yes
+k190,Test Engineer - Support,First level customer issue analysis,k185+k186 worked on,TAC Portal,k185+k186 worked on,NG,ANG,4,25,100,,Yes
+k191,Test Engineer - Support,Deployment support,Number of tickets worked on,TAC Portal,Number of tickets ((resolutionType=Multiple relevant),NG,ANG,1,3,12,,Yes
+k192,Test Engineer - Support,UDM install,Number of tickets worked on,TAC Portal,"Number of tickets (resolutionType=Migration, Installation or Update, other relevant)",NG,ANG,1,3,12,,Yes
+k193,Test Engineer - Support,Creating Artifacts,Number of Artifacts added,Wiki,Number of Artifacts added,NG,ANG,1,3,12,,Yes
+k194,Junior Software Engineer,UT creation,#UT cases,Copilot tracker,Number per week,NG,ANG,10,60,240,Hygiene,Yes
+k195,Software Engineer,UT creation,#UT cases,Copilot tracker,Number per week,NG,ANG,10,60,240,,Yes
+k196,Developer - Support phase,UT creation,#UT cases,Copilot tracker,Number per week,NG,ANG,10,15,60,Hygiene,Yes
+k197,Backend Engineer,UT creation,#UT cases,Copilot tracker,Number per week,NG,ANG,10,60,240,Hygiene,Yes
+k198,Embedded Software Engineer,UT creation,#UT cases,Copilot tracker,Number per week,NG,ANG,10,60,240,,Yes
+k199,Scrum Master,Release Planning: Develop detailed release plans.,Release Planning: Develop detailed release plans.,JIRA,> Team Size * Target SP,TG,,7,70,280,Hygiene,Yes
+k200,Scrum Master,Project Delivery: Ensure projects are delivered on time.,Project Delivery: Timeliness of project delivery.,JIRA,Delayed Story Points for full team < ,NL,,0.0,5.0,20.0,Hygiene,No
+k201,Scrum Master,Team Guidance: Provide effective technical guidance to the team.,Team Guidance: Team’s performance and feedback.,Copilot tracker,Help instances,NG,ANG,1,25,100,,Yes
+k202,Scrum Master,Person Utilization Rate,Story Points per sprint per Person (Product Team),JIRA,Story Points per sprint per Person (Product Team),RG,ANG,3.8,8,8,Input,No
+k203,Scrum Master,Code Review: Ensure high code quality across the team.,Code Review: frequency of code reviews.,GitHub,Number of reviews done in team >,NG,ANG,14,37.5,150,Quality,Yes
+k204,All,Merge code,# Merges,GitHub,Number of merges,NG,ANG,1,12,48,Output,Yes
+k205,All,Unique JIRA committed,# Unique JIRA committed,GitHub,#Unique JIRA committed,NG,ANG,2,12.5,50,Output,Yes
+k206,All,Reviews,# Reviews ,GitHub,# Reviews initiated,NG,ANG,1.0,12.0,46.0,Hygiene,Yes
+k207,Tech Lead,Person Utilization Rate,Story Points per sprint per Person (Product Team),JIRA,Story Points per sprint per Person (Product Team),RG,ANG,4,24,96,,No
+k208,Tech Lead,Coding Efficiency: Code generation for efficiency (Product Team) (Target*Team Size),Coding Efficiency: Copilot Code,Copilot Metrics,Copilot LOC (Product Team) (Target*Team Size) >= ,TG,ANG,40,400,1600,Output,Yes
+k209,Application Designer,Feature Implementation: Deliver new features within deadlines.,Feature Implementation: Number of features delivered on time.,JIRA,Story Points per Person,RG,ANG,4,49,196,,No
+k210,Application Designer,Code Efficiency: Write efficient and optimized code.,Code Efficiency: Measured through code reviews and performance benchmarks,GitHub,GITHub LOC Added,NG,ANG,80,800,3200,,Yes
+k211,Application Designer,"Code Quality: execute UT, Maintain high code quality and readability.","Code Quality: Code review scores, adherence to coding standards.",GitHub,Review comments received <,NL,ANL,5,60,240,,Yes
+k212,Application Designer,Team Guidance: Provide effective technical guidance to the team.,Team Guidance: Team’s performance and feedback.,Copilot tracker,Help instances,NG,ANG,1,12,48,,Yes
+k213,Common,Time in meetings (Not linked to JIRA tasks) (1 Week),Time in meetings (Not linked to JIRA tasks)(1 Week),Copilot tracker,Hours in meetings <,NL,,5,30,120,Hygiene,Yes
+k214,All,UT creation,#UT cases,Copilot tracker,Number per week,NG,ANG,10,60,240,Hygiene,Yes
+k215,Common,Team Level : Time spent in meetings (Average Weekly),Average time in meetings (Tasks not linked to JIRA),Copilot tracker,Team average per person  hours in meetings <,NL,,5,30,120,,No
+k216,Tech Lead,Average Dev Cycle time - Bugs (Team),Average Dev Cycle time - Bugs (Team),JIRA,Average Dev Cycle time - Bugs (Team),NL,ANL,10,2.5,10,Quality,No
+k217,Scrum Master,Assignment Delay - Bugs (Team),Assignment Delay - Bugs (Team),JIRA,Assignment Delay - Bugs (Team),NL,,1,0.25,1,,Yes
+k218,QA Engineer,Bug Reporting: Provide clear and detailed bug reports.,Bug Reporting: Quality and clarity of bug reports.,JIRA,#Bugs referred back for information <,NL,ANL,1,12,48,,Yes
+k219,Common,LOC per team,,GitHub,Total LOC at team level,NG,ANG,10000,60000,240000,,Yes
+k220,All,Story Points delivered,Story Points delivered,JIRA,Total SP delivered ,NG,ANG,4,40,160,Output,Yes
+k221,Common,Story Points delivered by Team (Target*Team Size),,JIRA,Story Points delivered by Team (Target*Team Size),TG,ANG,4,1,4,,No
+k222,All,LOC delivered per SP,"LOC delivered including Dev and Test code, UI",JIRA,k219/k221 >=,NG,ANG,100,25,100,Quality,No
+k223,Metric,Tracker Updates (Total),Tracker Updates (Total),Copilot tracker,Tracker Updates (Total),AG,ANG,5,50,200,,Yes
+k224,All,Tracker Updates ,Tracker Updates,Copilot tracker,Tracker Updates,NG,ANG,4,50,200,Hygiene,Yes
+k225,Metric,Late Entries (Total),# Late entries in tracker,Copilot tracker,# Late entries in tracker <=,AL,,0,10,40,,Yes
+k226,Metric,Future Updates (Total),# Future updates in tracker,Copilot tracker,# Future updates in tracker <=,AL,,0,1.25,5,,Yes
+k227,All,GITHub LOC Added,GITHub LOC Added,GitHub,GITHub LOC Added,NG,ANG,500,3000,12000,Output,Yes
+k228,Metric,Defects Raised (Total),Defects Raised (Total),JIRA,Defects Raised (Total) >=,AG,,5,30,120,,Yes
+k229,Common,Defects Raised (1 Week),Defects Raised (1 Week),JIRA,Defects Raised (1 Week) >=,NG,,5,,,Output,Yes
+k230,All,Assigned Defects (1 Week),Assigned Defects (1 Week),JIRA,Assigned Defects (1 Week),RG,,5,,,Input,No
+k231,Metric,Completed Story Points (Total),Completed Story Points (Total),JIRA,Completed Story Points (Total) >=,AG,,4,50,200,Output,Yes
+k232,Metric,Completed Tasks (Total),Completed Tasks (Total),JIRA,Completed Tasks (Total) >=,AG,,2,25,100,,Yes
+k233,All,Overdue SP,Overdue SP (2+ week late),JIRA,Overdue SP (2+ week late) <=,NL,,0,0,0,Hygiene,No
+k234,Common,Story Points (Latest 2 week Open),Story Points (Latest 2 week Open),JIRA,Story Points (Latest 2 week Open),NL,,8,2,8,,No
+k235,All,Current Tasks Assigned,Current Tasks Assigned,JIRA,Current Tasks Assigned in range,RG,,7,,,Input,No
+k236,Metric,Code Merges to Main (Total),Code Merges to Main (Total),GitHub,Code Merges to Main (Total) >=,AG,,1,12,48,Output,Yes
+k237,DevOps Engineer,CICD Health Check,CICD Health Check status,CICD Tracker,Health Check failed TCs <=,NL,ANL,0,2,5,Quality,No
+k238,Common,Sanity Tests Fail % Main Branch ,Sanity Test fail percent,CICD Tracker,Sanity Test fail percent Main branch <=,PL,APL,0%,5%,5%,Quality,No
+k239,Common,Sanity Tests Fail % Dev Branch ,Sanity Test fail percent,CICD Tracker,Sanity Test fail percent  Dev branch<=,PL,APL,20%,15%,15%,Quality,No
+k240,Security Engineer,SAST Gating issues (Product),SAST (Critical + High),CICD Tracker,SAST (Critical + High) Product <=,NL,ANL,0,2,5,,No
+k241,Common,SAST Gating issues (Product),SAST (Critical + High),CICD Tracker,SAST (Critical + High) Product <=,NL,ANL,0,2,5,Quality,No
+k242,Security Analyst,SAST Gating issues (Product),SAST (Critical + High),CICD Tracker,SAST (Critical + High) Product <=,NL,ANL,0,2,5,,No
+k243,Common,First level customer issue analysis (Role Based),Number of tickets,TAC Portal,Number of tickets (TAC) >=,NG,,4,47.5,190,Output,Yes
+k244,Common,Environment Consistency: Maintain consistency across deployment environments.,Environment Consistency: Environment audit results.,CICD Report,CICD Deployment success rate >=,PG,APG,90%,90%,90%,Quality,No
+k245,Architect,Data Integrity: Ensure data integrity and reliability.,Data Integrity: Number of data integrity issues found.,JIRA,# Open Bugs tagged Database,NL,ANL,0,1,4,Quality,Yes
+k246,Tech Lead,Active participation in reviews,Active participation in reviews - Number ,GitHub,# Reviews actively participated,NG,ANG,4,48,192,,Yes
+k247,Feature Owner,Active participation in reviews,Active participation in reviews - Number ,GitHub,# Reviews actively participated,NG,ANG,4,48,192,Hygiene,Yes
+k248,Feature Owner,Automation Test Coverage,% Coverage of new code by Automation tests,JIRA,Automation tests added by Scrum Team,NG,ANG,10,100,400,Output,Yes
+k249,Feature Owner,Requirement traceability,"Test, UI, Backend, Perf etc tasks present",JIRA,"Test, UI, Backend, Perf, Scan, CI etc tasks present",PG,,100%,100%,100%,Hygiene,No
+k250,Feature Owner,Team Guidance: Provide effective technical guidance to the team.,Team Guidance: Team’s performance and feedback.,Copilot tracker,Help instances in Scrum Team,NG,ANG,5,30,120,Hygiene,Yes
+k251,Common,Unit Tests Pass % (Product),Unit Tests Pass %,CICD Tracker,Unit Tests Pass % (Product),PG,APG,80%,90%,90%,Quality,No
+k252,Scrum Master,Unit Tests Pass % (Product),Unit Tests Pass %,CICD Tracker,Unit Tests Pass % (Product),PG,APG,80%,90%,90%,Quality,No
+k253,Feature Owner,Planning: Develop detailed plans and deliver,Adherence to release plans.,JIRA,Sprint content as per plan (Scrum Team Delayed SP <),NL,,0,5,20,Hygiene,Yes
+k254,Developer - Support phase,New Feature Analysis / Enhancement (Custom Product Config),Number of tickets worked on,TAC Portal,Number of tickets worked on (Enhancements),NG,ANG,1,1.5,6,Output,Yes
+k255,Weekly Score,Score,Score,Computation,Computation,NG,,75,22.5,90,,Yes
+k256,Annual Score,Score,Score,Computation,Computation,NG,,75,22.5,90,,Yes
+k257,Parameter,Team Size,Team Size,Computation,Computation,,,,,,,Yes
+k258,Message,Message to be shared,Message to be shared,Computation,Computation,,,,0,,,Yes
+k259,Common,Technical Debt,Unplanned Pending defects,JIRA/TAC Portal,#Open Bugs/Tickets in Unplanned (To Do) state,NL,ANL,40,40,30,Hygiene,No
+k260,Sr Software Engineer,SAST Gating issues (Product),SAST (Critical + High),CICD Tracker,SAST (Critical + High) Product <=,NL,ANL,0,2,2,Quality,No
+k261,Sr Software Engineer,Code Review: Ensure high code quality across the team.,Code Review: Quality and frequency of code reviews.,GitHub,Number of reviews where approver,NG,ANG,3,40,160,,Yes
+k262,Sr Software Engineer,Active participation in reviews,Active participation in reviews - Number ,GitHub,# Reviews actively participated,NG,ANG,4,48,192,,Yes
+k263,Sr Software Engineer,Unit Tests Pass % (Product),Unit Tests Pass %,CICD Tracker,Unit Tests Pass % (Product),PG,APG,80%,80%,90%,,No
+k264,Sr Integration Tester,Code Review: Ensure high code quality across the team.,Code Review: Quality and frequency of code reviews.,GitHub,Number of reviews where approver,NG,ANG,3,40,160,,Yes
+k265,Sr Integration Tester,Active participation in reviews,Active participation in reviews - Number ,GitHub,# Reviews actively participated,NG,ANG,4,48,192,,Yes
+k266,Sr Integration Tester,Automation: Automate repetitive tasks.,Automation: Number of automated tasks versus manual interventions.,CICD report,# Deployment automation,NG,ANG,1,5,20,,Yes
+k267,Sr Integration Tester,CI/CD Pipeline Efficiency: Maintain efficient CI/CD pipeline,CI/CD Pipeline Efficiency: Deployment frequency and success rate.,CICD report,Successful Build/Total Automated Builds,PG,APG,90%,90%,90%,,No
+k268,Developer,Code generation ratio,Individual: k227/k1 (9999 if Copilot LOC=0). Team/Scrum: sum(k227 for Developers) / sum(k1 for Developers) — same-member-base ratio avoids 9999 sentinel inflation. k1=Copilot LOC; k227=GIT LOC committed.,GitHub,k227/k1,NL,ANL,2,2,2,Hygiene,No
+k269,Data Engineer,Feature Implementation: Deliver new features within deadlines.,Feature Implementation: Number of features delivered on time.,JIRA,Story Points,NG,ANG,4,45,180,Output,Yes
+k270,Data Engineer,Code Quality: Maintain high code quality and readability.,"Code Quality: Code review scores, adherence to coding standards.",GitHub,Review comments received <,NL,ANL,25,125,500,Quality,Yes
+k271,Data Engineer,Query Performance: Optimize database queries for efficiency.,Query Performance: Execution time and resource consumption of queries.,Query Profiler,Query execution time <,NL,ANL,100,100,100,Quality,No
+k272,Data Scientist,Feature Implementation: Deliver new features within deadlines.,Feature Implementation: Number of features delivered on time.,JIRA,Story Points,NG,ANG,4,45,180,Output,Yes
+k273,Data Scientist,Code Quality: Maintain high code quality and readability.,"Code Quality: Code review scores, adherence to coding standards.",GitHub,Review comments received <,NL,ANL,25,125,500,Quality,Yes
+k274,Data Scientist,Identify or discover new technologies / frameworks and share,Research Technologies,JIRA,research-new-tech-analysis,NG,ANG,1,6,24,Input,Yes
+k275,Development Manager,Strategic Planning: Develop and execute strategic plans,Strategic Planning: Alignment with organizational goals,JIRA,Strategic initiatives completed,NG,ANG,1,3,12,Output,Yes
+k276,Development Manager,Team Performance: Ensure high performance of development teams,Team Performance: Team velocity and delivery metrics,JIRA,Team velocity trend,PG,APG,10,10,10,Output,No
+k277,Development Manager,Stakeholder Management: Effectively manage stakeholder expectations,Stakeholder Management: Stakeholder satisfaction scores,Feedback,Stakeholder satisfaction,PG,APG,80,80,85,Quality,No
+k278,Lead Data Scientist,Code Review: Ensure high code quality across the team.,Code Review: Quality and frequency of code reviews.,GitHub,Number of reviews where approver,NG,ANG,1,12.5,50,Hygiene,Yes
+k279,Lead Data Scientist,Project Delivery: Ensure projects are delivered on time.,Project Delivery: Timeliness of project delivery.,JIRA,SP delivered/team member (RM Heirarchy),NG,ANG,3.8,35,140,Output,Yes
+k280,Lead Data Scientist,Identify or discover new technologies / frameworks and share,Research Technologies,JIRA,research-new-tech-analysis,NG,ANG,1,6,24,Input,Yes
+k281,Lead Developer,Code Review: Ensure high code quality across the team.,Code Review: Quality and frequency of code reviews.,GitHub,Number of reviews where approver,NG,ANG,1,12.5,50,Hygiene,Yes
+k282,Lead Developer,Project Delivery: Ensure projects are delivered on time.,Project Delivery: Timeliness of project delivery.,JIRA,SP delivered/team member (RM Heirarchy),NG,ANG,3.8,35,140,Output,Yes
+k283,Lead Developer,Architecture: Design scalable and maintainable system architecture,Architecture: Design review scores and system scalability,Design Review,Architecture design quality,PG,APG,80,80,85,Quality,No
+k284,Lead Tester,Code Review: Ensure high code quality across the team.,Code Review: Quality and frequency of code reviews.,GitHub,Number of reviews where approver,NG,ANG,1,12.5,50,Hygiene,Yes
+k285,Lead Tester,Bug Identification: Efficiently identify bugs before release.,Bug Identification: Number of bugs found during testing phase.,JIRA,Bugs detected >,NG,ANG,5,30,120,Output,Yes
+k286,Lead Tester,Automation: Increase the number of automated tests.,Automation: Ratio of automated tests to manual tests.,CICD report,# Automation tests,NG,ANG,9,107.5,430,Hygiene,Yes
+k287,Lead Tester,Test Documentation: Maintain clear and thorough test documentation.,Test Documentation: Quality and completeness of test documentation.,JIRA,JIRA task for test plan,NG,ANG,1,6,24,Hygiene,Yes
+k288,Offshore Lead,Code Review: Ensure high code quality across the team.,Code Review: Quality and frequency of code reviews.,GitHub,Number of reviews where approver,NG,ANG,1,12.5,50,Hygiene,Yes
+k289,Offshore Lead,Project Delivery: Ensure projects are delivered on time.,Project Delivery: Timeliness of project delivery.,JIRA,SP delivered/team member (RM Heirarchy),NG,ANG,3.8,35,140,Output,No
+k290,Offshore Lead,Team Coordination: Coordinate offshore team activities effectively,Team Coordination: Team collaboration metrics,Team Feedback,Team coordination score,PG,APG,80,80,85,Quality,No
+k291,Splunk Architect,Architecture: Design scalable and maintainable system architecture,Architecture: Design review scores and system scalability,Design Review,Architecture design quality,PG,APG,80,80,85,Quality,No
+k292,Splunk Architect,Technical Documentation: Create comprehensive technical documentation,Technical Documentation: Quality and completeness of documentation,Documentation Review,Documentation quality score,PG,APG,80,80,85,Quality,No
+k293,Splunk Architect,System Performance: Optimize system performance and reliability,System Performance: Performance benchmarks and uptime,Monitoring,System uptime %,PG,APG,95,95,99,Quality,No
+k294,Support,Incident Resolution Time: Reduce time to resolve support incidents,Incident Resolution Time: Average time to resolve incidents,Support Tracker,Average resolution time <,NL,ANL,4,4,4,Output,No
+k295,Support,Customer Satisfaction: Maintain high customer satisfaction,Customer Satisfaction: Customer satisfaction scores,CSAT Survey,Customer satisfaction score,PG,APG,85,85,90,Quality,No
+k296,Web Developer,Code Quality: Maintain high code quality and readability.,"Code Quality: Code review scores, adherence to coding standards.",GitHub,Review comments received <,NL,ANL,25,125,500,Quality,Yes
+k297,Web Developer,UI Development: Develop high-quality user interfaces,UI Development: Number of UI components delivered,JIRA,UI components delivered,NG,ANG,3,30,120,Output,Yes
+k298,Web Developer,User Experience: Ensure positive user experience,User Experience: User feedback and usability scores,User Feedback,User experience score,PG,APG,80,80,85,Quality,No
+k299,All,Total Test Code Lines Committed: Track test code contributions,Total Test Code Lines Committed: Total lines of test code (added) committed per individual,GitHub,Test code lines added,NG,ANG,100,600,2400,Output,Yes
+k300,All,Test Code to Total Code Ratio: Maximize test coverage in commits,Test Code to Total Code Ratio: Percentage of test code lines relative to total code lines committed,GitHub,Test code ratio (%),PG,APG,20,20,20,Hygiene,No
+k301,All,DAST Gating Issues: Track total DAST security issues per team,DAST Gating Issues: Sum of High and Medium severity issues from AppScan DAST HTML reports (source: Summary of security issues section). If a team has multiple scan projects the counts are summed. Monthly/Quarterly/Annual values use median of weekly scans in the respective period.,AppScan DAST,DAST High+Medium issues (team total),NL,ANL,0,15,15,Quality,No
+k302,All,SAST Gating Issues: Track total SAST security issues per team,SAST Gating Issues: Sum of High and Medium severity issues from AppScan SAST HTML reports (source: Summary of security issues section). If a team has multiple scan projects the counts are summed. Monthly/Quarterly/Annual values use median of weekly scans in the respective period.,AppScan SAST,SAST High+Medium issues (team total),NL,ANL,0,15,15,Quality,No
+k303,All,SCA Gating Issues: Track total SCA security issues per team,SCA Gating Issues: Sum of High and Medium severity issues from AppScan SCA HTML reports (source: Summary of security issues section). If a team has multiple scan projects the counts are summed. Monthly/Quarterly/Annual values use median of weekly scans in the respective period.,AppScan SCA,SCA High+Medium issues (team total),NL,ANL,0,30,30,Quality,No
+k304,All,MEND Gating Issues: Track total Mend security issues per team,MEND Gating Issues: Sum of High and Medium severity issues from Mend PDF reports (source: Severity Distribution section). If a team has multiple scan projects the counts are summed. Monthly/Quarterly/Annual values use median of weekly scans in the respective period.,MEND,MEND High+Medium issues (team total),NL,ANL,0,20,20,Quality,No
+k305,Security Engineer,Unified Security Gating Issues: Aggregate security gating exposure across all scan channels,"Unified Security Gating Issues: Sum of High and Medium severity issues from DAST, SAST, SCA and MEND gating KPIs (k301+k302+k303+k304). Aggregated at team level and assigned to individuals. Monthly/Quarterly/Annual values reflect aggregated period medians from component KPIs.",Security Analytics,Unified gating issues (DAST+SAST+SCA+MEND),NL,ANL,0,50,50,Quality,No
+k306,Architect,Unified Security Gating Issues: Aggregate security gating exposure across all scan channels,Equivalent KPI to k305 for Architect role. Uses the same computation and data (k301+k302+k303+k304 aggregate).,Security Analytics,Unified gating issues (DAST+SAST+SCA+MEND),NL,ANL,0,50,50,Quality,No
+k307,Program Manager,Unified Security Gating Issues: Aggregate security gating exposure across all scan channels,Equivalent KPI to k305 for Program Manager role. Uses the same computation and data (k301+k302+k303+k304 aggregate).,Security Analytics,Unified gating issues (DAST+SAST+SCA+MEND),NL,ANL,0,50,50,Quality,No
+k308,All,Copilot Agent or Chat Usage: Track adoption of Copilot Agent or Chat features,Copilot Agent or Chat Usage: Number of distinct days user leveraged either Copilot Agent or Chat in the respective period. Individual-level tracking based on user login mapping.,Copilot Metrics,Days with Agent or Chat usage,NG,ANG,4.0,40.0,150.0,Input,Yes

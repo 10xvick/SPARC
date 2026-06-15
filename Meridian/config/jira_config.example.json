@@ -1,0 +1,18 @@
+{
+  "default": {
+    "jiraServer": "https://your-domain.atlassian.net",
+    "userId": "user@example.com",
+    "apiToken": "<JIRA_API_TOKEN>",
+    "maxResults": 100,
+    "cutoffDate": "2025-03-31"
+  },
+  "projects": {
+    "PROJECTKEY": {}
+  },
+  "prefix_team_mapping": {
+    "PROJECTKEY": "TEAM_NAME"
+  },
+  "outputFile": "output/JIRAIssues.csv",
+  "checkpointFile": "data/jira_fetch_checkpoint.json",
+  "historyFile": "output/JIRAIssues_History.csv"
+}

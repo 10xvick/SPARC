@@ -1,0 +1,138 @@
+{
+  "credentials": {
+    "username": "admin",
+    "password": "root123"
+  },
+  "nexus_domains": {
+    "dcem": "https://oosmdcem-nexus.hclpnp.com:8443",
+    "oosm": "https://oosm-nexus.hclpnp.com:8443"
+  },
+  "projects": [
+    {
+      "id": "apm",
+      "name": "APM",
+      "teams": ["APM-Core", "APM-RUM"],
+      "reports": [
+        { "type": "sast", "url": "https://oosmdcem-nexus.hclpnp.com:8443/repository/apmreport/dev_appscan_SAST.html",    "filename": "apm_sast.html" },
+        { "type": "sca",  "url": "https://oosmdcem-nexus.hclpnp.com:8443/repository/apmreport/dev_appscan_sca.html",     "filename": "apm_sca.html"  },
+        { "type": "dast", "url": "https://oosmdcem-nexus.hclpnp.com:8443/repository/apmreport/dev_AppScan_DAST.html",    "filename": "apm_dast.html" },
+        { "type": "mend", "url": "https://oosmdcem-nexus.hclpnp.com:8443/repository/apmreport/dev_APM_Mend_report.pdf",  "filename": "apm_mend.pdf"  }
+      ]
+    },
+    {
+      "id": "itad",
+      "name": "ITAD",
+      "teams": ["OOSM"],
+      "reports": [
+        { "type": "sast", "url": "https://oosm-nexus.hclpnp.com:8443/repository/itassetdiscovery_reports/sprint_appscan_SAST.html",  "filename": "itad_sast.html" },
+        { "type": "sca",  "url": "https://oosm-nexus.hclpnp.com:8443/repository/itassetdiscovery_reports/sprint_appscan_sca.html",   "filename": "itad_sca.html"  },
+        { "type": "dast", "url": "https://oosm-nexus.hclpnp.com:8443/repository/itassetdiscovery_reports/sprint_AppScan_DAST.html",  "filename": "itad_dast.html" },
+        { "type": "mend", "url": "https://oosm-nexus.hclpnp.com:8443/repository/itassetdiscovery_reports/sprint_IT_Mend_report.pdf", "filename": "itad_mend.pdf"  }
+      ]
+    },
+    {
+      "id": "oosm",
+      "name": "OOSM",
+      "teams": ["OOSM"],
+      "reports": [
+        { "type": "sast", "url": "https://oosmdcem-nexus.hclpnp.com:8443/repository/oosm_dev_reports/sprint_appscan_results.html",    "filename": "oosm_sast.html" },
+        { "type": "sca",  "url": "https://oosmdcem-nexus.hclpnp.com:8443/repository/oosm_dev_reports/sprint_appscan_sca.html",        "filename": "oosm_sca.html"  },
+        { "type": "dast", "url": "https://oosmdcem-nexus.hclpnp.com:8443/repository/oosm_dev_reports/sprint_AppScan_DAST.html",       "filename": "oosm_dast.html" },
+        { "type": "mend", "url": "https://oosmdcem-nexus.hclpnp.com:8443/repository/oosm_dev_reports/sprint_OOSM_Mend_report.pdf",    "filename": "oosm_mend.pdf"  }
+      ]
+    },
+    {
+      "id": "fso",
+      "name": "FSO",
+      "teams": ["FSO"],
+      "reports": [
+        { "type": "sast", "url": "https://oosmdcem-nexus.hclpnp.com:8443/repository/fso_reports/sprint_appscan_results.html",  "filename": "fso_sast.html" },
+        { "type": "sca",  "url": "https://oosmdcem-nexus.hclpnp.com:8443/repository/fso_reports/sprint_appscan_sca.html",     "filename": "fso_sca.html"  },
+        { "type": "dast", "url": "https://oosmdcem-nexus.hclpnp.com:8443/repository/fso_reports/sprint_AppScan_DAST.html",    "filename": "fso_dast.html" },
+        { "type": "mend", "url": "https://oosmdcem-nexus.hclpnp.com:8443/repository/fso_reports/sprint_FSO_Mend_report.pdf",  "filename": "fso_mend.pdf"  }
+      ]
+    },
+    {
+      "id": "dcem_des",
+      "name": "DCEM-DES",
+      "teams": ["DCEM"],
+      "reports": [
+        { "type": "sast", "url": "https://oosmdcem-nexus.hclpnp.com:8443/repository/DES_image_TAR/dev_appscan_sast_results.html", "filename": "dcem_des_sast.html" },
+        { "type": "sca",  "url": "https://oosmdcem-nexus.hclpnp.com:8443/repository/DES_image_TAR/dev_appscan_sca.html",         "filename": "dcem_des_sca.html"  },
+        { "type": "dast", "url": "https://oosmdcem-nexus.hclpnp.com:8443/repository/DES_image_TAR/TestCaseReports/dev_AppScan_DAST.html", "filename": "dcem_des_dast.html" },
+        { "type": "mend", "url": "https://oosmdcem-nexus.hclpnp.com:8443/repository/DES_image_TAR/TestCaseReports/dev_Mend_report.pdf",   "filename": "dcem_des_mend.pdf"  }
+      ]
+    },
+    {
+      "id": "nsot",
+      "name": "NSOT",
+      "teams": ["OOSM"],
+      "reports": [
+        { "type": "sast", "url": "https://oosmdcem-nexus.hclpnp.com:8443/repository/nsot_dev_reports/sprint_appscan_results.html", "filename": "nsot_sast.html" },
+        { "type": "sca",  "url": "https://oosmdcem-nexus.hclpnp.com:8443/repository/nsot_dev_reports/sprint_appscan_sca.html",     "filename": "nsot_sca.html"  },
+        { "type": "mend", "url": "https://oosmdcem-nexus.hclpnp.com:8443/repository/nsot_dev_reports/sprint_OOSM_Mend_report.pdf",  "filename": "nsot_mend.pdf"  }
+      ]
+    },
+    {
+      "id": "primehome_postgres",
+      "name": "Primehome Postgres",
+      "teams": ["UDM/Support"],
+      "reports": [
+        { "type": "sast", "url": "https://oosm-nexus.hclpnp.com:8443/repository/udm_reports/v6.6.cmhs.postgres_appscan_SAST.html", "filename": "primehome_postgres_sast.html" },
+        { "type": "sca",  "url": "https://oosm-nexus.hclpnp.com:8443/repository/udm_reports/v6.6.cmhs.postgres_appscan_sca.html",  "filename": "primehome_postgres_sca.html"  },
+        { "type": "mend", "url": "https://oosm-nexus.hclpnp.com:8443/repository/udm_reports/v6.6.cmhs.postgres_Primehome_report.pdf", "filename": "primehome_postgres_mend.pdf"  }
+      ]
+    },
+    {
+      "id": "primehome_kktc",
+      "name": "Primehome KKTC",
+      "teams": ["UDM/Support"],
+      "reports": [
+        { "type": "sast", "url": "https://oosm-nexus.hclpnp.com:8443/repository/udm_reports/v6.6.cmhs.postgres.kktc_appscan_SAST.html", "filename": "primehome_kktc_sast.html" },
+        { "type": "sca",  "url": "https://oosm-nexus.hclpnp.com:8443/repository/udm_reports/v6.6.cmhs.postgres.kktc_appscan_sca.html",  "filename": "primehome_kktc_sca.html"  },
+        { "type": "mend", "url": "https://oosm-nexus.hclpnp.com:8443/repository/udm_reports/v6.6.cmhs.postgres.kktc_Primehome_report.pdf", "filename": "primehome_kktc_mend.pdf"  }
+      ]
+    },
+    {
+      "id": "primehome_togo",
+      "name": "Primehome TOGO",
+      "teams": ["UDM/Support"],
+      "reports": [
+        { "type": "sast", "url": "https://oosm-nexus.hclpnp.com:8443/repository/udm_reports/v6.6.cmhs.postgres.togo_appscan_SAST.html", "filename": "primehome_togo_sast.html" },
+        { "type": "sca",  "url": "https://oosm-nexus.hclpnp.com:8443/repository/udm_reports/v6.6.cmhs.postgres.togo_appscan_sca.html",  "filename": "primehome_togo_sca.html"  },
+        { "type": "mend", "url": "https://oosm-nexus.hclpnp.com:8443/repository/udm_reports/v6.6.cmhs.postgres.togo_Primehome_report.pdf", "filename": "primehome_togo_mend.pdf"  }
+      ]
+    },
+    {
+      "id": "primehome_cmhs",
+      "name": "Primehome CMHS",
+      "teams": ["UDM/Support"],
+      "reports": [
+        { "type": "sast", "url": "https://oosm-nexus.hclpnp.com:8443/repository/udm_reports/v6.6.cmhs_appscan_SAST.html", "filename": "primehome_cmhs_sast.html" },
+        { "type": "sca",  "url": "https://oosm-nexus.hclpnp.com:8443/repository/udm_reports/v6.6.cmhs_appscan_sca.html",  "filename": "primehome_cmhs_sca.html"  },
+        { "type": "mend", "url": "https://oosm-nexus.hclpnp.com:8443/repository/udm_reports/v6.6.cmhs_Primehome_report.pdf", "filename": "primehome_cmhs_mend.pdf"  }
+      ]
+    },
+    {
+      "id": "kkt",
+      "name": "KKT",
+      "teams": ["UDM/Support"],
+      "reports": [
+        { "type": "sast", "url": "https://oosmdcem-nexus.hclpnp.com:8443/repository/KKT_reports/dev_update_appscan_sast_results.html", "filename": "kkt_sast.html" },
+        { "type": "sca",  "url": "https://oosmdcem-nexus.hclpnp.com:8443/repository/KKT_reports/dev_update_appscan_sca.html",         "filename": "kkt_sca.html"  },
+        { "type": "mend", "url": "https://oosmdcem-nexus.hclpnp.com:8443/repository/KKT_reports/TestCaseReports/dev_update_Mend_report.pdf", "filename": "kkt_mend.pdf"  }
+      ]
+    },
+    {
+      "id": "iem_onprem",
+      "name": "IEM-OnPrem",
+      "teams": ["FSO"],
+      "reports": [
+        { "type": "sast", "url": "https://oosm-nexus.hclpnp.com:8443/repository/iem_reports/sprint_appscan_results.html", "filename": "iem_sast.html" },
+        { "type": "sca",  "url": "https://oosm-nexus.hclpnp.com:8443/repository/iem_reports/sprint_appscan_sca.html",     "filename": "iem_sca.html"  },
+        { "type": "dast", "url": "https://oosm-nexus.hclpnp.com:8443/repository/iem_reports/sprint_AppScan_DAST.html",    "filename": "iem_dast.html" },
+        { "type": "mend", "url": "https://oosm-nexus.hclpnp.com:8443/repository/iem_reports/sprint_IEM_Mend_report.pdf",  "filename": "iem_mend.pdf"  }
+      ]
+    }
+  ]
+}

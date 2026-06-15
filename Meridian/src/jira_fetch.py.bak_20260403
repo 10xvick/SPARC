@@ -1,0 +1,823 @@
+#!/usr/bin/env python3
+"""
+JIRA Issues Fetcher - Python version of JIRAIssuesRawAPIdata.gs
+Fetches JIRA issues from multiple projects and saves them to a CSV file.
+Supports incremental updates and maintains state between runs.
+"""
+
+import csv
+import json
+import sys
+import os
+from datetime import datetime, timezone
+import time
+import base64
+import requests
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
+from typing import Dict, List, Any, Optional
+
+# All configuration will be loaded from jira_config.json
+def _resolve_project_root() -> str:
+    """Resolve TeamSight project root for config/data/output paths."""
+    env_root = os.getenv('TEAMSIGHT_HOME')
+    if env_root:
+        return os.path.abspath(os.path.expanduser(env_root))
+
+    source_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    if os.path.isdir(os.path.join(source_root, 'config')):
+        return source_root
+
+    cwd_root = os.getcwd()
+    if os.path.isdir(os.path.join(cwd_root, 'config')):
+        return cwd_root
+
+    return source_root
+
+
+def _resolve_path(path_value: str) -> str:
+    """Resolve relative paths against TeamSight project root."""
+    if os.path.isabs(path_value):
+        return path_value
+    return os.path.join(PROJECT_ROOT, path_value)
+
+
+def _ensure_parent_dir(file_path: str):
+    """Ensure parent directory exists for a file path."""
+    parent_dir = os.path.dirname(file_path)
+    if parent_dir:
+        os.makedirs(parent_dir, exist_ok=True)
+
+
+PROJECT_ROOT = _resolve_project_root()
+CONFIG_FILE = os.path.join(PROJECT_ROOT, 'config', 'jira_config.json')
+
+CSV_HEADERS = [
+    'Issue Type', 'Key', 'Components', 'Parent', 'Priority', 'Status', 
+    'Story Points', 'Assignee', 'Summary', 'Time Spent', 'Customers', 
+    'Labels', 'Updated', 'Updated by', 'Created', 'Sprint.endDate', 
+    'Reporter', 'Linked Issues', 'Sprint'
+]
+
+HISTORY_HEADERS = [
+    'Key', 'ChangeDate', 'ChangeType', 'Field', 'FromValue', 'ToValue', 
+    'Author', 'IssueType', 'Priority'
+]
+
+
+def load_config_file(config_file: str = CONFIG_FILE) -> Dict[str, Any]:
+    """Load configuration from JSON file."""
+    if not os.path.exists(config_file):
+        print(f"❌ Error: Config file '{config_file}' not found.")
+        print(f"   Please create {config_file} with required configuration.")
+        sys.exit(1)
+    
+    try:
+        with open(config_file, 'r') as f:
+            config = json.load(f)
+            
+            # Validate required sections
+            if 'default' not in config:
+                print(f"❌ Error: 'default' section missing in {config_file}")
+                sys.exit(1)
+            
+            if 'projects' not in config:
+                print(f"❌ Error: 'projects' section missing in {config_file}")
+                sys.exit(1)
+            
+            # Convert relative paths to absolute paths from project root
+            if 'outputFile' in config and not os.path.isabs(config['outputFile']):
+                config['outputFile'] = _resolve_path(config['outputFile'])
+            if 'checkpointFile' in config and not os.path.isabs(config['checkpointFile']):
+                config['checkpointFile'] = _resolve_path(config['checkpointFile'])
+            if 'historyFile' in config and not os.path.isabs(config['historyFile']):
+                config['historyFile'] = _resolve_path(config['historyFile'])
+            
+            return config
+    except json.JSONDecodeError as e:
+        print(f"❌ Error: Invalid JSON in config file: {e}")
+        sys.exit(1)
+    except Exception as e:
+        print(f"❌ Error loading config file: {e}")
+        sys.exit(1)
+
+
+class JIRAFetcher:
+    """Fetches JIRA issues and saves them to CSV with incremental updates."""
+    
+    def __init__(self, config_data: Dict[str, Any]):
+        """Initialize JIRA fetcher with configuration from file."""
+        self.config_data = config_data
+        
+        # Extract configuration
+        self.default_config = config_data.get('default', {})
+        self.project_configs = config_data.get('projects', {})
+        self.projects = list(self.project_configs.keys())
+        
+        # Get output and checkpoint files
+        self.output_file = config_data.get('outputFile', 'JIRAIssues.csv')
+        self.checkpoint_file = config_data.get('checkpointFile', 'jira_fetch_checkpoint.json')
+        self.history_file = config_data.get('historyFile', 'output/JIRAIssues_History.csv')
+        
+        # Get cutoff date
+        cutoff_date_str = self.default_config.get('cutoffDate', '2025-03-31')
+        self.cutoff_date = datetime.strptime(cutoff_date_str, '%Y-%m-%d').replace(tzinfo=timezone.utc)
+        
+        # Validate we have projects
+        if not self.projects:
+            print("❌ Error: No projects defined in configuration file")
+            sys.exit(1)
+        
+        self.existing_keys = {}
+        self.existing_history_keys = set()  # Track unique history entries
+        self.history_data = []  # Collect all history entries
+        self.load_existing_data()
+        self.load_existing_history()
+        self.checkpoint = self.load_checkpoint()
+    
+    def get_project_config(self, project: str) -> Optional[Dict[str, Any]]:
+        """Get configuration for a specific project, merging with defaults.
+        
+        Returns None if required configuration is missing."""
+        # Start with default config
+        project_config = {
+            'jiraServer': self.default_config.get('jiraServer', ''),
+            'userId': self.default_config.get('userId', ''),
+            'apiToken': self.default_config.get('apiToken', ''),
+            'maxResults': self.default_config.get('maxResults', 50)
+        }
+        
+        # Override with project-specific settings
+        if project in self.project_configs:
+            project_config.update(self.project_configs[project])
+        
+        # Validate required fields
+        if not project_config['jiraServer']:
+            return None
+        if not project_config['userId']:
+            return None
+        if not project_config['apiToken']:
+            return None
+        
+        return project_config
+    
+    def get_auth_headers(self, project: str) -> Optional[Dict[str, str]]:
+        """Get authentication headers for a specific project.
+        
+        Returns None if configuration is missing."""
+        proj_config = self.get_project_config(project)
+        if proj_config is None:
+            return None
+        
+        credentials = f"{proj_config['userId']}:{proj_config['apiToken']}"
+        encoded_credentials = base64.b64encode(credentials.encode()).decode()
+        return {
+            'Authorization': f'Basic {encoded_credentials}',
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }
+    
+    def load_existing_data(self):
+        """Load existing CSV data into memory."""
+        if not os.path.exists(self.output_file):
+            return
+        
+        try:
+            with open(self.output_file, 'r', encoding='utf-8') as f:
+                reader = csv.DictReader(f)
+                for idx, row in enumerate(reader):
+                    key = row.get('Key', '')
+                    if key:
+                        self.existing_keys[key] = {
+                            'row_index': idx + 1,  # +1 for header row
+                            'updated': row.get('Updated', ''),
+                            'data': row
+                        }
+            print(f"Loaded {len(self.existing_keys)} existing issues from {self.output_file}")
+        except Exception as e:
+            print(f"Error loading existing data: {e}")
+    
+    def load_existing_history(self):
+        """Load existing history data into memory."""
+        if not os.path.exists(self.history_file):
+            return
+        
+        try:
+            with open(self.history_file, 'r', encoding='utf-8') as f:
+                reader = csv.DictReader(f)
+                for row in reader:
+                    # Create unique key for each history entry
+                    key = f"{row.get('Key')}|{row.get('ChangeDate')}|{row.get('Field')}|{row.get('ToValue')}"
+                    if key not in self.existing_history_keys:
+                        self.existing_history_keys.add(key)
+                        self.history_data.append(row)
+            print(f"Loaded {len(self.existing_history_keys)} existing history entries from {self.history_file}")
+        except Exception as e:
+            print(f"Error loading existing history: {e}")
+    
+    def load_checkpoint(self) -> Dict[str, Any]:
+        """Load checkpoint data from file."""
+        default_checkpoint = {
+            'currentProjectIndex': 0,
+            'projectTokens': {proj: '' for proj in self.projects}
+        }
+        
+        if not os.path.exists(self.checkpoint_file):
+            return default_checkpoint
+        
+        try:
+            with open(self.checkpoint_file, 'r') as f:
+                checkpoint = json.load(f)
+                
+                # Migrate old format to new format
+                if 'nextPageToken' in checkpoint and 'projectTokens' not in checkpoint:
+                    # Convert old single token format to project-specific format
+                    idx = checkpoint.get('currentProjectIndex', 0)
+                    if idx < len(self.projects):
+                        project = self.projects[idx]
+                        checkpoint['projectTokens'] = {proj: '' for proj in self.projects}
+                        checkpoint['projectTokens'][project] = checkpoint.get('nextPageToken', '')
+                    else:
+                        checkpoint['projectTokens'] = {proj: '' for proj in self.projects}
+                    del checkpoint['nextPageToken']
+                
+                # Ensure all current projects have entries
+                if 'projectTokens' not in checkpoint:
+                    checkpoint['projectTokens'] = {}
+                for proj in self.projects:
+                    if proj not in checkpoint['projectTokens']:
+                        checkpoint['projectTokens'][proj] = ''
+                
+                return checkpoint
+        except Exception as e:
+            print(f"Error loading checkpoint: {e}")
+            return default_checkpoint
+    
+    def save_checkpoint(self):
+        """Save checkpoint data to file."""
+        try:
+            _ensure_parent_dir(self.checkpoint_file)
+            with open(self.checkpoint_file, 'w') as f:
+                json.dump(self.checkpoint, f, indent=2)
+        except Exception as e:
+            print(f"Error saving checkpoint: {e}")
+    
+    def initialize_csv(self):
+        """Initialize CSV file with headers if it doesn't exist."""
+        if not os.path.exists(self.output_file):
+            _ensure_parent_dir(self.output_file)
+            with open(self.output_file, 'w', newline='', encoding='utf-8') as f:
+                writer = csv.writer(f)
+                writer.writerow(CSV_HEADERS)
+            print(f"Initialized {self.output_file} with headers")
+    
+    def initialize_history_csv(self):
+        """Initialize history CSV file with headers if it doesn't exist."""
+        if not os.path.exists(self.history_file):
+            _ensure_parent_dir(self.history_file)
+            with open(self.history_file, 'w', newline='', encoding='utf-8') as f:
+                writer = csv.writer(f)
+                writer.writerow(HISTORY_HEADERS)
+            print(f"Initialized {self.history_file} with headers")
+    
+    def parse_issue(self, issue: Dict[str, Any]) -> List[Any]:
+        """Parse a JIRA issue into a CSV row."""
+        fields = issue.get('fields', {})
+        
+        # Extract sprint information
+        sprint_end_date = ''
+        sprint_name = 'NA'
+        sprints = fields.get('customfield_10020', [])
+        if sprints and len(sprints) > 0:
+            last_sprint = sprints[-1]
+            sprint_end_date = last_sprint.get('endDate', '')
+            sprint_name = last_sprint.get('name', 'NA')
+        
+        # Parse dates
+        updated_date = fields.get('updated', '')
+        created_date = fields.get('created', '')
+        
+        # Parse story points
+        story_points = 0
+        if fields.get('customfield_10368'):
+            try:
+                story_points = int(fields['customfield_10368'])
+            except (ValueError, TypeError):
+                story_points = 0
+        
+        # Extract components
+        components = ', '.join([c.get('name', '') for c in fields.get('components', [])])
+        
+        # Extract labels
+        labels = ', '.join(fields.get('labels', []))
+        
+        # Extract linked issues
+        linked_issues = []
+        for link in fields.get('issuelinks', []):
+            if link.get('outwardIssue'):
+                linked_issues.append(link['outwardIssue'].get('key', ''))
+            elif link.get('inwardIssue'):
+                linked_issues.append(link['inwardIssue'].get('key', ''))
+        linked_issues_str = ', '.join(linked_issues)
+        
+        row = [
+            (fields.get('issuetype') or {}).get('name', ''),
+            issue.get('key', ''),
+            components,
+            (fields.get('parent') or {}).get('key', ''),
+            (fields.get('priority') or {}).get('name', ''),
+            (fields.get('status') or {}).get('name', ''),
+            story_points,
+            (fields.get('assignee') or {}).get('displayName', ''),
+            fields.get('summary', ''),
+            fields.get('timespent', ''),
+            fields.get('Customers', ''),
+            labels,
+            updated_date,
+            (fields.get('reporter') or {}).get('displayName', ''),
+            created_date,
+            sprint_end_date,
+            (fields.get('reporter') or {}).get('displayName', ''),
+            linked_issues_str,
+            sprint_name
+        ]
+        
+        return row
+    
+    def parse_changelog(self, issue: Dict[str, Any]) -> List[Dict[str, str]]:
+        """Parse changelog to extract state changes, assignee changes, and sprint changes.
+        
+        Returns list of history entries with Key, ChangeDate, ChangeType, Field, 
+        FromValue, ToValue, Author, IssueType, Priority.
+        """
+        histories = []
+        changelog = issue.get('changelog', {})
+        fields = issue.get('fields', {})
+        
+        issue_key = issue.get('key', '')
+        issue_type = (fields.get('issuetype') or {}).get('name', '')
+        priority = (fields.get('priority') or {}).get('name', '')
+        
+        for history in changelog.get('histories', []):
+            created = history.get('created', '')
+            author = (history.get('author') or {}).get('displayName', '')
+            
+            for item in history.get('items', []):
+                field = item.get('field', '')
+                
+                # Track specific fields we care about
+                if field in ['status', 'assignee', 'Sprint', 'priority']:
+                    change_type = field
+                    if field == 'Sprint':
+                        change_type = 'sprint'
+                    
+                    from_value = item.get('fromString', '')
+                    to_value = item.get('toString', '')
+                    
+                    # Create unique key for this history entry
+                    unique_key = f"{issue_key}|{created}|{field}|{to_value}"
+                    
+                    # Only add if we haven't seen this exact change before
+                    if unique_key not in self.existing_history_keys:
+                        histories.append({
+                            'Key': issue_key,
+                            'ChangeDate': created,
+                            'ChangeType': change_type,
+                            'Field': field,
+                            'FromValue': from_value,
+                            'ToValue': to_value,
+                            'Author': author,
+                            'IssueType': issue_type,
+                            'Priority': priority
+                        })
+                        self.existing_history_keys.add(unique_key)
+        
+        return histories
+    
+    def create_session_with_retries(self) -> requests.Session:
+        """Create a requests session with retry logic."""
+        session = requests.Session()
+        
+        # Configure retry strategy
+        retry_strategy = Retry(
+            total=5,  # Total number of retries
+            backoff_factor=2,  # Wait 1, 2, 4, 8, 16 seconds between retries
+            status_forcelist=[429, 500, 502, 503, 504],  # Retry on these status codes
+            allowed_methods=["HEAD", "GET", "POST", "PUT", "DELETE", "OPTIONS", "TRACE"]
+        )
+        
+        adapter = HTTPAdapter(max_retries=retry_strategy)
+        session.mount("https://", adapter)
+        session.mount("http://", adapter)
+        
+        return session
+    
+    def fetch_issues(self, project: str, next_page_token: str = '') -> Dict[str, Any]:
+        """Fetch issues for a given project with retry logic.
+        
+        Returns None if configuration is missing or request fails after retries."""
+        proj_config = self.get_project_config(project)
+        if proj_config is None:
+            return None
+        
+        headers = self.get_auth_headers(project)
+        if headers is None:
+            return None
+        
+        cutoff_date_str = self.default_config.get('cutoffDate', '2025-03-31')
+        url = f"{proj_config['jiraServer']}/rest/api/3/search/jql"
+        
+        payload = {
+            "jql": f"project=\"{project}\" AND updated > '{cutoff_date_str}' ORDER BY updated DESC",
+            "maxResults": proj_config['maxResults'],
+            "nextPageToken": str(next_page_token),
+            "expand": "changelog",
+            "fields": [
+                "issuetype", "key", "components", "parent", "priority", "status",
+                "customfield_10368", "assignee", "summary", "timespent", "Customers",
+                "labels", "updated", "created", "reporter", "issuelinks", "customfield_10020",
+                "resolutiondate"
+            ]
+        }
+        
+        max_attempts = 3
+        attempt = 0
+        
+        while attempt < max_attempts:
+            attempt += 1
+            try:
+                # Create session with retry logic
+                session = self.create_session_with_retries()
+                
+                # Add delay between attempts to avoid rate limiting
+                if attempt > 1:
+                    wait_time = 5 * attempt  # 5, 10, 15 seconds
+                    print(f"   ⏳ Waiting {wait_time} seconds before retry {attempt}/{max_attempts}...")
+                    time.sleep(wait_time)
+                
+                response = session.post(url, headers=headers, json=payload, timeout=60)
+                
+                if response.status_code == 200:
+                    return response.json()
+                elif response.status_code == 429:
+                    # Rate limited
+                    retry_after = response.headers.get('Retry-After', '60')
+                    try:
+                        wait_time = int(retry_after)
+                    except ValueError:
+                        wait_time = 60
+                    print(f"   ⚠️  Rate limited. Waiting {wait_time} seconds...")
+                    time.sleep(wait_time)
+                    continue
+                else:
+                    print(f"   ❌ Error fetching data: {response.status_code}")
+                    if attempt < max_attempts:
+                        print(f"   🔄 Retrying... (attempt {attempt + 1}/{max_attempts})")
+                        continue
+                    return None
+                    
+            except requests.exceptions.SSLError as e:
+                print(f"   ❌ SSL Error: {str(e)[:100]}...")
+                if attempt < max_attempts:
+                    print(f"   🔄 Retrying with backoff... (attempt {attempt + 1}/{max_attempts})")
+                    time.sleep(10 * attempt)  # 10, 20, 30 seconds
+                    continue
+                else:
+                    print(f"   ⚠️  Skipping project {project} after {max_attempts} SSL failures")
+                    return None
+                    
+            except requests.exceptions.ConnectionError as e:
+                print(f"   ❌ Connection Error: {str(e)[:100]}...")
+                if attempt < max_attempts:
+                    print(f"   🔄 Retrying... (attempt {attempt + 1}/{max_attempts})")
+                    time.sleep(5 * attempt)
+                    continue
+                else:
+                    return None
+                    
+            except requests.exceptions.Timeout as e:
+                print(f"   ❌ Timeout Error: Request took longer than 60 seconds")
+                if attempt < max_attempts:
+                    print(f"   🔄 Retrying... (attempt {attempt + 1}/{max_attempts})")
+                    continue
+                else:
+                    return None
+                    
+            except Exception as e:
+                print(f"   ❌ Unexpected error: {str(e)[:100]}...")
+                if attempt < max_attempts:
+                    print(f"   🔄 Retrying... (attempt {attempt + 1}/{max_attempts})")
+                    time.sleep(5 * attempt)
+                    continue
+                else:
+                    return None
+        
+        return None
+    
+    def write_csv_data(self, all_data: List[Dict[str, str]]):
+        """Write all data to CSV file."""
+        _ensure_parent_dir(self.output_file)
+        with open(self.output_file, 'w', newline='', encoding='utf-8') as f:
+            writer = csv.DictWriter(f, fieldnames=CSV_HEADERS)
+            writer.writeheader()
+            writer.writerows(all_data)
+    
+    def write_history_csv(self):
+        """Write all history data to CSV file."""
+        _ensure_parent_dir(self.history_file)
+        with open(self.history_file, 'w', newline='', encoding='utf-8') as f:
+            writer = csv.DictWriter(f, fieldnames=HISTORY_HEADERS)
+            writer.writeheader()
+            writer.writerows(self.history_data)
+    
+    def run(self):
+        """Main execution loop."""
+        self.initialize_csv()
+        self.initialize_history_csv()
+        
+        current_project_index = self.checkpoint.get('currentProjectIndex', 0)
+        project_tokens = self.checkpoint.get('projectTokens', {})
+        
+        for project_idx in range(current_project_index, len(self.projects)):
+            project = self.projects[project_idx]
+            next_page_token = project_tokens.get(project, '')
+            total_count = 0
+            retrieved_count = 0
+            updated_count = 0
+            
+            print(f"\n📦 Processing project: {project}")
+            
+            # Check if project has valid configuration
+            proj_config = self.get_project_config(project)
+            if proj_config is None:
+                print(f"   ❌ Error: Missing configuration for project {project}")
+                print(f"      Please add 'jiraServer', 'userId', and 'apiToken' to the default section")
+                print(f"      or project-specific section in {CONFIG_FILE}")
+                print(f"   ⏭️  Skipping project {project}")
+                # Mark as complete and move to next
+                self.checkpoint['projectTokens'][project] = ''
+                self.checkpoint['currentProjectIndex'] = project_idx + 1
+                self.save_checkpoint()
+                continue
+            
+            while True:
+                print(f"Next Token: {next_page_token}")
+                
+                data = self.fetch_issues(project, next_page_token)
+                
+                if not data:
+                    print(f"End of project {project} (error or no data)")
+                    self.checkpoint['projectTokens'][project] = ''
+                    self.checkpoint['currentProjectIndex'] = project_idx + 1
+                    self.save_checkpoint()
+                    time.sleep(10)
+                    break
+                
+                issues = data.get('issues', [])
+                total_count += len(issues)
+                print(f"Total Rows: {total_count}")
+                
+                # Process each issue
+                for issue in issues:
+                    row_data = self.parse_issue(issue)
+                    issue_key = row_data[1]  # Key is at index 1
+                    updated_date_str = row_data[12]  # Updated is at index 12
+                    
+                    # Parse changelog for history tracking
+                    history_entries = self.parse_changelog(issue)
+                    self.history_data.extend(history_entries)
+                    
+                    # Parse updated date
+                    try:
+                        updated_date = datetime.fromisoformat(updated_date_str.replace('Z', '+00:00'))
+                    except:
+                        updated_date = datetime.now(timezone.utc)
+                    
+                    # Check if issue exists
+                    if issue_key in self.existing_keys:
+                        existing_updated_str = self.existing_keys[issue_key]['updated']
+                        try:
+                            existing_updated = datetime.fromisoformat(existing_updated_str.replace('Z', '+00:00'))
+                        except:
+                            existing_updated = datetime.min.replace(tzinfo=timezone.utc)
+                        
+                        # Update if newer
+                        if updated_date > existing_updated:
+                            self.existing_keys[issue_key]['data'] = dict(zip(CSV_HEADERS, row_data))
+                            self.existing_keys[issue_key]['updated'] = updated_date_str
+                            updated_count += 1
+                        # If not newer, keep existing data (no action needed)
+                    else:
+                        # Add new row if updated after cutoff
+                        if updated_date > self.cutoff_date:
+                            self.existing_keys[issue_key] = {
+                                'row_index': len(self.existing_keys) + 1,
+                                'updated': updated_date_str,
+                                'data': dict(zip(CSV_HEADERS, row_data))
+                            }
+                            retrieved_count += 1
+                
+                # Get next page token
+                next_page_token = str(data.get('nextPageToken', ''))
+                print(f"Retrieved Next Token: {next_page_token}")
+                
+                # Save checkpoint with project-specific token
+                self.checkpoint['projectTokens'][project] = next_page_token
+                self.checkpoint['currentProjectIndex'] = project_idx
+                self.save_checkpoint()
+                
+                # Write CSV data after each batch to save progress
+                all_data = [info['data'] for info in self.existing_keys.values()]
+                self.write_csv_data(all_data)
+                
+                # Write history data
+                if self.history_data:
+                    self.write_history_csv()
+                
+                print(f"Project: {project} - Retrieved Keys: {retrieved_count} - Updated Rows: {updated_count}")
+                
+                # Check if we're done with this project
+                proj_config = self.get_project_config(project)
+                if len(issues) < proj_config['maxResults'] or not next_page_token:
+                    print(f"End of project {project}")
+                    self.checkpoint['projectTokens'][project] = ''
+                    self.checkpoint['currentProjectIndex'] = project_idx + 1
+                    self.save_checkpoint()
+                    break
+                
+                # Add delay between requests to avoid rate limiting
+                time.sleep(2)
+            
+            print(f"Project: {project} - Total Keys: {total_count} - Retrieved Keys: {retrieved_count} - Updated Rows: {updated_count}")
+        
+        # Write all data to CSV
+        all_data = [info['data'] for info in self.existing_keys.values()]
+        self.write_csv_data(all_data)
+        print(f"\nData written to {self.output_file}")
+        
+        # Write history data
+        if self.history_data:
+            self.write_history_csv()
+            print(f"History data written to {self.history_file}")
+            print(f"Total history entries: {len(self.history_data)}")
+        
+        # Reset checkpoint
+        self.checkpoint['projectTokens'] = {proj: '' for proj in self.projects}
+        self.checkpoint['currentProjectIndex'] = 0
+        self.save_checkpoint()
+        print("Fetch completed successfully!")
+
+
+def reset_data(output_file: str, checkpoint_file: str, history_file: str = None):
+    """Reset CSV and checkpoint files."""
+    # Remove existing files
+    if os.path.exists(output_file):
+        os.remove(output_file)
+        print(f"   🗑️  Removed {output_file}")
+    
+    if os.path.exists(checkpoint_file):
+        os.remove(checkpoint_file)
+        print(f"   🗑️  Removed {checkpoint_file}")
+    
+    if history_file and os.path.exists(history_file):
+        os.remove(history_file)
+        print(f"   🗑️  Removed {history_file}")
+    
+    # Create fresh CSV with headers
+    _ensure_parent_dir(output_file)
+    with open(output_file, 'w', newline='', encoding='utf-8') as f:
+        writer = csv.writer(f)
+        writer.writerow(CSV_HEADERS)
+    
+    print(f"   ✅ Created fresh {output_file} with headers.")
+
+
+def parse_arguments(args: List[str]) -> tuple[str, bool, bool]:
+    """Parse command line arguments.
+    
+    Returns:
+        tuple: (config_file, reset, fetch)
+    """
+    config_file = CONFIG_FILE
+    reset = False
+    fetch = False
+    
+    for arg in args[1:]:  # Skip script name
+        if arg == '--reset' or arg == '-r':
+            reset = True
+            continue
+        
+        if arg == '--fetch' or arg == '-f':
+            fetch = True
+            continue
+        
+        if '=' in arg:
+            param, value = arg.split('=', 1)
+            param = param.lstrip('-')
+            
+            if param == 'configFile':
+                config_file = value
+            else:
+                print(f"⚠️  Warning: Parameter '{param}' ignored - all config should be in {config_file}")
+        else:
+            print(f"⚠️  Warning: Invalid argument format '{arg}' ignored")
+    
+    return config_file, reset, fetch
+
+
+def print_usage():
+    """Print usage information."""
+    print("""
+Usage: python jira_fetch.py [options]
+
+Options:
+  --fetch, -f                  Fetch JIRA issues and update CSV file
+  --reset, -r                  Reset CSV and checkpoint files
+  --help, -h                   Show this help message
+  configFile=<path>            Path to configuration file (default: jira_config.json)
+
+Examples:
+  python jira_fetch.py --fetch
+  python jira_fetch.py --reset
+  python jira_fetch.py --fetch configFile=custom_config.json
+
+Configuration File (jira_config.json):
+  All configuration is now managed in the JSON file:
+  - default: Default JIRA server, credentials, and settings
+  - projects: Per-project configuration overrides
+  - outputFile: CSV output filename
+  - checkpointFile: Checkpoint filename
+  
+  Project list is automatically derived from the projects defined in the config file.
+  Project-specific settings override defaults.
+  
+Example jira_config.json:
+  {
+    "default": {
+      "jiraServer": "https://your-jira.atlassian.net",
+      "userId": "your.email@example.com",
+      "apiToken": "your-api-token",
+      "maxResults": 50,
+      "cutoffDate": "2025-03-31"
+    },
+    "projects": {
+      "PROJ1": {},
+      "PROJ2": {"jiraServer": "https://different-jira.atlassian.net"}
+    },
+    "outputFile": "JIRAIssues.csv",
+    "checkpointFile": "jira_fetch_checkpoint.json"
+  }
+""")
+
+
+def main():
+    """Main entry point."""
+    if len(sys.argv) > 1 and (sys.argv[1] == '--help' or sys.argv[1] == '-h'):
+        print_usage()
+        return
+    
+    config_file, reset, fetch = parse_arguments(sys.argv)
+    
+    # If neither reset nor fetch is specified, show help
+    if not reset and not fetch:
+        print_usage()
+        return
+    
+    # Load configuration
+    config_data = load_config_file(config_file)
+    
+    print("=" * 60)
+    print("JIRA Issues Fetcher")
+    print("=" * 60)
+    
+    # Display configuration summary
+    default_config = config_data.get('default', {})
+    projects = list(config_data.get('projects', {}).keys())
+    
+    print(f"Config File: {config_file}")
+    print(f"JIRA Server (default): {default_config.get('jiraServer', 'Not configured')}")
+    print(f"Projects: {', '.join(projects) if projects else 'None'}")
+    print(f"Output File: {config_data.get('outputFile', 'JIRAIssues.csv')}")
+    print(f"Cutoff Date: {default_config.get('cutoffDate', 'Not configured')}")
+    print(f"Max Results: {default_config.get('maxResults', 50)}")
+    print("=" * 60)
+    
+    if reset:
+        print("\n🔄 Resetting data...")
+        output_file = config_data.get('outputFile', 'JIRAIssues.csv')
+        checkpoint_file = config_data.get('checkpointFile', 'jira_fetch_checkpoint.json')
+        history_file = config_data.get('historyFile', 'output/JIRAIssues_History.csv')
+        reset_data(output_file, checkpoint_file, history_file)
+        print("   ✅ Reset complete. Run with --fetch to fetch data.")
+        return
+    
+    if fetch:
+        # Run the fetcher
+        print("\n🚀 Starting JIRA fetch...\n")
+        fetcher = JIRAFetcher(config_data)
+        fetcher.run()
+        print("\n✅ Fetch complete!")
+
+
+if __name__ == '__main__':
+    main()

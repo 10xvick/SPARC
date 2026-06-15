@@ -1,0 +1,47 @@
+{
+  "version": "2.2",
+  "description": "Scoring configuration for KPI categories, status weights, ROG thresholds, and role-based weights.",
+  "weightages": {
+    "Input": 10.0,
+    "Output": 50.0,
+    "Quality": 30.0,
+    "Hygiene": 10.0
+  },
+  "status_weights": {
+    "Green": 1.0,
+    "Orange": 0.75,
+    "Red": 0.0
+  },
+  "role_weights": {
+    "Primary": 20.0,
+    "Secondary": 10.0,
+    "All": 5.0,
+    "Common": 3.0,
+    "Other": 1.0
+  },
+  "aggregation_role_weights": {
+    "specific": 20.0,
+    "non_specific": 5.0
+  },
+  "rog_thresholds": {
+    "green_threshold": 100.0,
+    "orange_threshold": 70.0
+  },
+  "score_display_thresholds": {
+    "green_min": 70.0,
+    "orange_min": 36.0,
+    "red_max": 35.0
+  },
+  "calculation_method": "role_weighted_status",
+  "formula": "Individual: category_score = sum(role_weight x status_credit) / sum(role_weight) x weightage using status credits Green=1.0, Orange=0.75, Red=0.0 and role weights Primary=20.0, Secondary=10.0, All=5.0, Common=3.0, Other=1.0. Team/Scrum use role weights specific=20.0 and non_specific=5.0. Overall = sum of category scores (max 100).",
+  "notes": [
+    "Category weightages define importance of each KPI category (must sum to 100%)",
+    "Status weights define credit given for each performance level (Green=full, Orange=partial, Red=none)",
+    "Role weights for individual scores: Primary=20, Secondary=10, All=5, Common=3, Other/Metric=1",
+    "Aggregation role weights for team/scrum: role-specific KPIs=10, All/Common KPIs=5",
+    "ROG thresholds define performance percentage boundaries for individual KPI status determination",
+    "Score display thresholds define color coding for overall and category score gauges (0-35 Red, 36-70 Orange, 71-100 Green)",
+    "Only applicable KPIs for the role/team/scrum are included in scoring",
+    "Empty categories contribute 0 to the overall score"
+  ]
+}

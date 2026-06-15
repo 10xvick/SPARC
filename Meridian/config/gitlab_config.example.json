@@ -1,0 +1,18 @@
+{
+  "default": {
+    "gitlabToken": "<GITLAB_TOKEN>",
+    "gitlabApiBaseUrl": "https://gitlab.example.com/api/v4",
+    "batchSize": 100,
+    "checkpointOverlapDays": 16,
+    "overlapDays": 16
+  },
+  "repositories": {
+    "GROUP/PROJECT_NAME": {
+      "projectId": 1,
+      "team": "TEAM_NAME"
+    }
+  },
+  "outputFile": "output/github_commits.csv",
+  "checkpointFile": "data/gitlab_fetch_checkpoint.json",
+  "exportFormat": "csv"
+}

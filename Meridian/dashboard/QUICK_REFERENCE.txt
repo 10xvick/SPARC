@@ -1,0 +1,121 @@
+╔═══════════════════════════════════════════════════════════════╗
+║                    TeamSight Dashboard                        ║
+║                    Quick Reference Card                       ║
+╚═══════════════════════════════════════════════════════════════╝
+
+📁 Location: <installation-folder>/dashboard
+
+┌───────────────────────────────────────────────────────────────┐
+│ ESSENTIAL COMMANDS                                            │
+└───────────────────────────────────────────────────────────────┘
+
+  Start Everything:
+    cd dashboard && ./manage.sh start
+
+  Stop Everything:
+    ./manage.sh stop
+
+  Check Status:
+    ./manage.sh status
+
+  View Logs:
+    ./manage.sh logs backend
+    ./manage.sh logs frontend
+
+┌───────────────────────────────────────────────────────────────┐
+│ URLS                                                          │
+└───────────────────────────────────────────────────────────────┘
+
+  🌐 Frontend:        http://localhost:5173
+  🔧 Backend API:     http://127.0.0.1:8000
+  📚 API Docs:        http://127.0.0.1:8000/docs
+
+┌───────────────────────────────────────────────────────────────┐
+│ INDIVIDUAL SERVICE CONTROL                                    │
+└───────────────────────────────────────────────────────────────┘
+
+  Backend Only:
+    ./manage.sh start backend
+    ./manage.sh stop backend
+    ./manage.sh restart backend
+
+  Frontend Only:
+    ./manage.sh start frontend
+    ./manage.sh stop frontend
+    ./manage.sh restart frontend
+
+┌───────────────────────────────────────────────────────────────┐
+│ DEBUGGING                                                     │
+└───────────────────────────────────────────────────────────────┘
+
+  Follow Logs (Real-time):
+    ./manage.sh follow backend
+    ./manage.sh follow frontend
+
+  View More Log Lines:
+    ./manage.sh logs backend 200
+    ./manage.sh logs frontend 200
+
+  Clean Restart:
+    ./manage.sh stop all
+    sleep 2
+    ./manage.sh start all
+
+┌───────────────────────────────────────────────────────────────┐
+│ SHELL ALIASES (Optional)                                      │
+└───────────────────────────────────────────────────────────────┘
+
+  Load Aliases:
+    source dashboard/aliases.sh
+
+  Use Short Commands:
+    ts-start       # Start all
+    ts-stop        # Stop all
+    ts-status      # Check status
+    ts-be-restart  # Restart backend
+    ts-fe-restart  # Restart frontend
+
+┌───────────────────────────────────────────────────────────────┐
+│ FILES & LOCATIONS                                             │
+└───────────────────────────────────────────────────────────────┘
+
+  Management Script:  dashboard/manage.sh
+  Backend Logs:       dashboard/logs/backend.log
+  Frontend Logs:      dashboard/logs/frontend.log
+  Process IDs:        dashboard/.pids/
+  Documentation:      dashboard/SERVICE_MANAGEMENT.md
+
+┌───────────────────────────────────────────────────────────────┐
+│ FEATURES                                                      │
+└───────────────────────────────────────────────────────────────┘
+
+  ✓ Employee Management (Resources.csv - 80 employees)
+  ✓ Role/KPI Management (Roles.csv - 268 KPIs)
+  ✓ Inline editing
+  ✓ CSV export
+  ✓ Detailed side drawers
+  ✓ Manager SAPID ↔ Ref conversion
+  ✓ NaN handling (empty strings instead of "nan")
+  ✓ Filtering and pagination
+  ✓ Auto-reload (backend) & HMR (frontend)
+
+┌───────────────────────────────────────────────────────────────┐
+│ TROUBLESHOOTING                                               │
+└───────────────────────────────────────────────────────────────┘
+
+  Problem: Services won't start
+  Solution: ./manage.sh stop all && sleep 2 && ./manage.sh start
+
+  Problem: Port already in use
+  Solution: Script auto-cleans ports 8000 and 5173
+
+  Problem: Backend errors
+  Solution: ./manage.sh logs backend 100
+
+  Problem: Frontend blank
+  Solution: ./manage.sh restart frontend
+
+╔═══════════════════════════════════════════════════════════════╗
+║ Save this file or keep it open for quick reference!          ║
+║ Full docs: dashboard/SERVICE_MANAGEMENT.md                   ║
+╚═══════════════════════════════════════════════════════════════╝

@@ -1,0 +1,29 @@
+{
+  "database": {
+    "server": "your-server.database.windows.net",
+    "port": 1433,
+    "database": "your-database",
+    "user": "user@your-database",
+    "password": "<DATABASE_PASSWORD>",
+    "authentication": "ActiveDirectoryPassword",
+    "encrypt": true,
+    "trustServerCertificate": false,
+    "hostNameInCertificate": "*.database.windows.net",
+    "loginTimeout": 120
+  },
+  "schedule": {
+    "enabled": true,
+    "cron_expression": "15 3 * * *",
+    "description": "Daily at 3:15 AM local time"
+  },
+  "cutoffDate": "2025-03-31",
+  "features": {
+    "test_connectivity": true,
+    "list_tables": true,
+    "collect_metrics": true,
+    "export_format": "csv"
+  },
+  "projects": [
+    "PROJECT_NAME"
+  ]
+}

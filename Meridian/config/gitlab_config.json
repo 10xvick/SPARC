@@ -1,0 +1,18 @@
+{
+  "default": {
+    "gitlabToken": "",
+    "gitlabApiBaseUrl": "http://172.20.0.7:4156/api/v4",
+    "batchSize": 100,
+    "checkpointOverlapDays": 16,
+    "overlapDays": 16
+  },
+  "repositories": {
+    "Xhaul/ci_m5g": {
+      "projectId": 1,
+      "team": "XHAUL"
+    }
+  },
+  "outputFile": "output/github_commits.csv",
+  "checkpointFile": "data/gitlab_fetch_checkpoint.json",
+  "exportFormat": "csv"
+}

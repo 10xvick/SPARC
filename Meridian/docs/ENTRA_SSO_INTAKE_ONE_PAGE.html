@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TeamSight Microsoft Entra ID SSO Intake</title>
+  <style>
+    :root {
+      --bg: #f7f8fa;
+      --paper: #ffffff;
+      --ink: #15202b;
+      --muted: #5f6b7a;
+      --line: #d7dde5;
+      --brand: #005a9c;
+      --ok: #0b7a3b;
+      --warn: #a06400;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+      line-height: 1.35;
+    }
+
+    .page {
+      max-width: 980px;
+      margin: 18px auto;
+      padding: 18px 20px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+
+    h1 {
+      margin: 0 0 4px;
+      color: var(--brand);
+      font-size: 24px;
+      letter-spacing: 0.2px;
+    }
+
+    .subtitle {
+      margin: 0 0 14px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    h2 {
+      margin: 14px 0 8px;
+      font-size: 16px;
+      color: var(--brand);
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 4px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 12px;
+    }
+
+    .grid-1 {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+
+    .field {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 8px;
+      min-height: 52px;
+      background: #fff;
+    }
+
+    .label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--muted);
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .value {
+      font-size: 14px;
+      word-break: break-word;
+    }
+
+    .value.prefill {
+      color: #0f3d63;
+      font-weight: 600;
+    }
+
+    .hint {
+      margin-top: 4px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .row-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px 12px;
+    }
+
+    .checks {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px 14px;
+      font-size: 14px;
+      margin-top: 6px;
+    }
+
+    .check {
+      border: 1px dashed var(--line);
+      border-radius: 4px;
+      padding: 6px 8px;
+      background: #fcfdff;
+    }
+
+    .status-ok { color: var(--ok); font-weight: 700; }
+    .status-warn { color: var(--warn); font-weight: 700; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8px;
+      font-size: 13px;
+    }
+
+    th, td {
+      border: 1px solid var(--line);
+      text-align: left;
+      padding: 7px 8px;
+      vertical-align: top;
+    }
+
+    th {
+      background: #f3f6fb;
+      color: #274665;
+      font-weight: 700;
+    }
+
+    .foot {
+      margin-top: 12px;
+      padding-top: 8px;
+      border-top: 1px solid var(--line);
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    @media print {
+      body { background: #fff; }
+      .page {
+        margin: 0;
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+      }
+      h1 { font-size: 22px; }
+      .field { min-height: 46px; }
+      .checks { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <h1>TeamSight SSO Intake (Microsoft Entra ID)</h1>
+    <p class="subtitle">One-page implementation template for prototype: identify signed-in user and return Email + SAPID</p>
+
+    <h2>1) Project and Tenant</h2>
+    <div class="grid">
+      <div class="field"><span class="label">Project Name</span><div class="value">TeamSight SSO Prototype</div></div>
+      <div class="field"><span class="label">Environment</span><div class="value">Development</div></div>
+      <div class="field"><span class="label">Tenant Type</span><div class="value prefill">Single-tenant (recommended)</div></div>
+      <div class="field"><span class="label">Tenant ID (GUID)</span><div class="value">____________________________</div></div>
+      <div class="field"><span class="label">Tenant Domain</span><div class="value">____________________________</div></div>
+      <div class="field"><span class="label">Authority URL</span><div class="value prefill">https://login.microsoftonline.com/&lt;tenant-id&gt;</div></div>
+    </div>
+
+    <h2>2) App Registrations</h2>
+    <div class="grid">
+      <div class="field"><span class="label">Frontend (SPA) - Client ID</span><div class="value">____________________________</div></div>
+      <div class="field"><span class="label">Backend API - Client ID</span><div class="value">____________________________</div></div>
+      <div class="field"><span class="label">API Application ID URI (aud)</span><div class="value">api://_______________________</div></div>
+      <div class="field"><span class="label">Exposed Scope</span><div class="value prefill">user_impersonation</div></div>
+      <div class="field"><span class="label">SPA Redirect URI (Local)</span><div class="value prefill">http://localhost:5173</div></div>
+      <div class="field"><span class="label">SPA Redirect URI (Hosted)</span><div class="value">____________________________</div></div>
+    </div>
+
+    <h2>3) Required Claims (Prefilled Expected Names)</h2>
+    <div class="row-3">
+      <div class="field">
+        <span class="label">Stable User ID Claim</span>
+        <div class="value prefill">oid</div>
+        <div class="hint">Use as immutable identity key.</div>
+      </div>
+      <div class="field">
+        <span class="label">Display Name Claim</span>
+        <div class="value prefill">name</div>
+      </div>
+      <div class="field">
+        <span class="label">Tenant Claim</span>
+        <div class="value prefill">tid</div>
+      </div>
+    </div>
+
+    <div class="row-3" style="margin-top:8px;">
+      <div class="field">
+        <span class="label">Primary Email Claim</span>
+        <div class="value prefill">preferred_username</div>
+        <div class="hint">Fallback order below.</div>
+      </div>
+      <div class="field">
+        <span class="label">Email Fallback #1</span>
+        <div class="value prefill">email</div>
+      </div>
+      <div class="field">
+        <span class="label">Email Fallback #2</span>
+        <div class="value prefill">upn / mail</div>
+      </div>
+    </div>
+
+    <div class="row-3" style="margin-top:8px;">
+      <div class="field">
+        <span class="label">SAPID Claim (Preferred)</span>
+        <div class="value prefill">employeeid</div>
+      </div>
+      <div class="field">
+        <span class="label">SAPID Claim (Alternate)</span>
+        <div class="value prefill">extension_&lt;appIdNoHyphen&gt;_sapid</div>
+      </div>
+      <div class="field">
+        <span class="label">Final SAPID Claim Used by Backend</span>
+        <div class="value prefill">employeeid (fallback extension_..._sapid)</div>
+      </div>
+    </div>
+
+    <h2>4) Backend Validation Settings</h2>
+    <div class="grid">
+      <div class="field"><span class="label">Issuer (iss)</span><div class="value prefill">https://login.microsoftonline.com/&lt;tenant-id&gt;/v2.0</div></div>
+      <div class="field"><span class="label">Audience (aud)</span><div class="value">api://_______________________</div></div>
+      <div class="field"><span class="label">OpenID Metadata</span><div class="value prefill">https://login.microsoftonline.com/&lt;tenant-id&gt;/v2.0/.well-known/openid-configuration</div></div>
+      <div class="field"><span class="label">Clock Skew</span><div class="value prefill">120 seconds</div></div>
+      <div class="field"><span class="label">Token Type for API</span><div class="value prefill">Access Token (OIDC auth code + PKCE)</div></div>
+      <div class="field"><span class="label">Consent</span><div class="value prefill">Admin consent recommended</div></div>
+    </div>
+
+    <h2>5) TeamSight Mapping Rules (Prototype)</h2>
+    <div class="grid">
+      <div class="field"><span class="label">Primary User Match</span><div class="value prefill">SAPID from token</div></div>
+      <div class="field"><span class="label">Secondary Match</span><div class="value prefill">Email (normalized lowercase)</div></div>
+      <div class="field"><span class="label">When SAPID Missing</span><div class="value prefill status-warn">Deny login (prototype default)</div></div>
+      <div class="field"><span class="label">Authorization Source</span><div class="value prefill">Existing TeamSight roles/permissions</div></div>
+    </div>
+
+    <h2>6) Prototype API Contract</h2>
+    <div class="field">
+      <span class="label">Endpoint</span>
+      <div class="value prefill">GET /api/auth/whoami</div>
+      <table>
+        <thead>
+          <tr><th>Field</th><th>Source Claim</th><th>Required</th><th>Notes</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>auth_source</td><td>constant</td><td>Yes</td><td>Value: entra_id</td></tr>
+          <tr><td>oid</td><td>oid</td><td>Yes</td><td>Primary identity</td></tr>
+          <tr><td>email</td><td>preferred_username -> email -> upn/mail</td><td>Yes</td><td>Normalize lowercase</td></tr>
+          <tr><td>sapid</td><td>employeeid -> extension_..._sapid</td><td>Yes</td><td>Must map to TeamSight user</td></tr>
+          <tr><td>name</td><td>name</td><td>Yes</td><td>Display only</td></tr>
+          <tr><td>tenant_id</td><td>tid</td><td>Yes</td><td>Tenant guard</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>7) Test Users (Minimum)</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>User</th>
+          <th>Expected Email</th>
+          <th>Expected SAPID</th>
+          <th>Expected Outcome</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>A (happy path)</td>
+          <td>________________</td>
+          <td>________________</td>
+          <td class="status-ok">Success</td>
+        </tr>
+        <tr>
+          <td>B (missing SAPID)</td>
+          <td>________________</td>
+          <td>(missing)</td>
+          <td class="status-warn">Denied with clear error</td>
+        </tr>
+        <tr>
+          <td>C (email alias)</td>
+          <td>________________</td>
+          <td>________________</td>
+          <td class="status-ok">Success via SAPID</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>8) Go / No-Go Checklist</h2>
+    <div class="checks">
+      <div class="check">[ ] SPA app registration completed</div>
+      <div class="check">[ ] API app registration completed</div>
+      <div class="check">[ ] Scope exposed and consent granted</div>
+      <div class="check">[ ] Optional claims configured</div>
+      <div class="check">[ ] SAPID claim validated in token</div>
+      <div class="check">[ ] Issuer + audience validation configured</div>
+      <div class="check">[ ] /api/auth/whoami returns email + sapid</div>
+      <div class="check">[ ] 3-user test matrix passed</div>
+    </div>
+
+    <p class="foot">
+      Owner: ____________________ | Date: ____________________ | Security reviewer: ____________________
+    </p>
+  </main>
+</body>
+</html>

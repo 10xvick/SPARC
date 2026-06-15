@@ -1,0 +1,1220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TeamSight – Technology Stack &amp; Architecture</title>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <style>
+    :root {
+      --primary:  #1976d2;
+      --primary-dark: #0d47a1;
+      --accent:   #ff6f00;
+      --bg:       #f5f7fa;
+      --surface:  #ffffff;
+      --border:   #e0e0e0;
+      --text:     #212121;
+      --muted:    #616161;
+      --green:    #2e7d32;
+      --orange:   #e65100;
+      --red:      #c62828;
+      --tag-fe:   #1565c0;
+      --tag-be:   #2e7d32;
+      --tag-kpi:  #6a1b9a;
+      --tag-int:  #e65100;
+      --tag-inf:  #37474f;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    /* ── Header ─────────────────────────────────────────── */
+    header {
+      background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 60%, #42a5f5 100%);
+      color: #fff;
+      padding: 48px 64px 40px;
+    }
+    header h1 { font-size: 2.4rem; font-weight: 700; letter-spacing: -0.5px; }
+    header .subtitle {
+      font-size: 1.1rem; opacity: 0.88; margin-top: 6px;
+    }
+    header .meta {
+      margin-top: 18px; font-size: 0.85rem; opacity: 0.75;
+      display: flex; gap: 24px; flex-wrap: wrap;
+    }
+    header .meta span::before { content: "● "; }
+
+    /* ── Nav / ToC ───────────────────────────────────────── */
+    nav.toc {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 64px;
+      display: flex; gap: 6px; flex-wrap: wrap; align-items: center;
+    }
+    nav.toc a {
+      font-size: 0.82rem; font-weight: 500; color: var(--primary);
+      text-decoration: none; padding: 4px 10px; border-radius: 20px;
+      border: 1px solid var(--border); transition: background 0.15s;
+    }
+    nav.toc a:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+    /* ── Layout ──────────────────────────────────────────── */
+    main { max-width: 1200px; margin: 0 auto; padding: 40px 32px 80px; }
+
+    section { margin-bottom: 56px; }
+    section > h2 {
+      font-size: 1.55rem; font-weight: 700;
+      color: var(--primary-dark);
+      border-left: 5px solid var(--primary);
+      padding-left: 14px; margin-bottom: 24px;
+    }
+    section > h3 {
+      font-size: 1.15rem; font-weight: 600;
+      color: var(--text); margin: 28px 0 12px;
+    }
+    p { margin-bottom: 12px; color: var(--text); }
+    p.note {
+      background: #e3f2fd; border-left: 4px solid var(--primary);
+      padding: 10px 14px; border-radius: 4px; font-size: 0.9rem;
+    }
+
+    /* ── Layer Tag ───────────────────────────────────────── */
+    .layer-tag {
+      display: inline-block; font-size: 0.72rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.6px;
+      padding: 2px 8px; border-radius: 12px; color: #fff;
+      vertical-align: middle; margin-left: 8px;
+    }
+    .tag-fe  { background: var(--tag-fe);  }
+    .tag-be  { background: var(--tag-be);  }
+    .tag-kpi { background: var(--tag-kpi); }
+    .tag-int { background: var(--tag-int); }
+    .tag-inf { background: var(--tag-inf); }
+
+    /* ── Tech Grid ───────────────────────────────────────── */
+    .tech-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 18px;
+    }
+    .tech-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+      transition: box-shadow 0.2s;
+    }
+    .tech-card:hover { box-shadow: 0 4px 14px rgba(0,0,0,0.10); }
+    .tech-card .card-header {
+      display: flex; align-items: center; gap: 8px;
+      margin-bottom: 10px;
+    }
+    .tech-card .card-icon {
+      width: 36px; height: 36px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem; flex-shrink: 0;
+    }
+    .tech-card h4 { font-size: 1rem; font-weight: 600; }
+    .tech-card .version {
+      font-size: 0.75rem; color: var(--muted);
+      font-weight: 400; margin-left: 4px;
+    }
+    .tech-card p { font-size: 0.88rem; color: var(--muted); margin: 0; }
+    .tech-card .tags { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 5px; }
+    .tech-card .pill {
+      font-size: 0.72rem; padding: 2px 8px; border-radius: 10px;
+      background: var(--bg); border: 1px solid var(--border); color: var(--muted);
+    }
+
+    /* ── Mermaid diagram wrapper ─────────────────────────── */
+    .diagram-wrap {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 28px 20px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+      overflow-x: auto;
+      margin-bottom: 20px;
+    }
+    .diagram-wrap .mermaid {
+      min-width: 600px;
+      display: flex;
+      justify-content: center;
+    }
+    .diagram-caption {
+      text-align: center; font-size: 0.83rem; color: var(--muted);
+      margin-top: 10px; font-style: italic;
+    }
+
+    /* ── Module table ────────────────────────────────────── */
+    .module-table {
+      width: 100%; border-collapse: collapse; margin-top: 8px;
+      font-size: 0.88rem;
+    }
+    .module-table th {
+      background: var(--primary); color: #fff;
+      padding: 10px 14px; text-align: left; font-weight: 600;
+    }
+    .module-table th:first-child { border-radius: 8px 0 0 0; }
+    .module-table th:last-child  { border-radius: 0 8px 0 0; }
+    .module-table td {
+      padding: 9px 14px; border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    .module-table tr:nth-child(even) td { background: var(--bg); }
+    .module-table tr:hover td { background: #e3f2fd22; }
+    .module-table code {
+      background: #f3e5f5; color: #6a1b9a;
+      padding: 1px 5px; border-radius: 4px; font-size: 0.82rem;
+    }
+
+    /* ── KPI list ────────────────────────────────────────── */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 10px;
+    }
+    .kpi-item {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 8px; padding: 10px 14px; font-size: 0.85rem;
+    }
+    .kpi-item .kpi-id {
+      font-weight: 700; color: var(--tag-kpi); font-size: 0.78rem;
+    }
+
+    /* ── Data flow list ──────────────────────────────────── */
+    .flow-steps {
+      counter-reset: flow;
+      list-style: none;
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .flow-steps li {
+      counter-increment: flow;
+      display: flex; align-items: flex-start; gap: 14px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 8px; padding: 12px 16px; font-size: 0.9rem;
+    }
+    .flow-steps li::before {
+      content: counter(flow);
+      background: var(--primary); color: #fff;
+      border-radius: 50%; min-width: 26px; height: 26px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.78rem; font-weight: 700; flex-shrink: 0;
+    }
+
+    /* ── Security list ───────────────────────────────────── */
+    .security-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .security-list li {
+      display: flex; align-items: flex-start; gap: 10px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 8px; padding: 10px 14px; font-size: 0.88rem;
+    }
+    .security-list li .icon { font-size: 1.1rem; flex-shrink: 0; }
+
+    /* ── Footer ──────────────────────────────────────────── */
+    footer {
+      text-align: center; font-size: 0.8rem; color: var(--muted);
+      padding: 24px; border-top: 1px solid var(--border);
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>TeamSight – Technology Stack &amp; Architecture</h1>
+  <div class="subtitle">Comprehensive reference for the TeamSight KPI &amp; Employee-Metrics Platform</div>
+  <div class="meta">
+    <span>Version 2.1.8</span>
+    <span>April 2026</span>
+    <span>Python 3.10+ · Node 18+</span>
+    <span>27 KPIs · 165 Resources</span>
+  </div>
+</header>
+
+<nav class="toc">
+  <a href="#overview">Overview</a>
+  <a href="#frontend">Frontend</a>
+  <a href="#backend">Backend</a>
+  <a href="#kpi-engine">KPI Engine</a>
+  <a href="#integrations">Integrations</a>
+  <a href="#data">Data Layer</a>
+  <a href="#security">Security</a>
+  <a href="#diagrams">Architecture Diagrams</a>
+  <a href="#modules">Module Reference</a>
+  <a href="#data-flow">Data Flow</a>
+  <a href="#deployment">Deployment</a>
+</nav>
+
+<main>
+
+  <!-- ═══ OVERVIEW ═══════════════════════════════════════════════ -->
+  <section id="overview">
+    <h2>Platform Overview</h2>
+    <p>
+      TeamSight is an <strong>engineering-metrics platform</strong> that collects, processes, and visualises
+      KPI data across 165 employees organised into Teams and Scrums. It integrates with <strong>JIRA</strong>,
+      <strong>GitHub</strong>, <strong>GitHub Copilot Metrics</strong>, and <strong>security-scanning tools</strong>
+      to automatically evaluate up to <strong>27 KPIs</strong> per employee per sprint period.
+    </p>
+    <p>
+      The platform follows a clean three-tier architecture: a <em>Python KPI Engine</em> that processes raw
+      source data into structured CSV snapshots; a <em>FastAPI REST backend</em> that serves, schedules, and
+      aggregates those snapshots; and a <em>React/TypeScript single-page application</em> that presents the
+      data through drill-down dashboards (Team → Scrum → Employee).
+    </p>
+    <p class="note">
+      All services are managed through <code>dashboard/manage.sh</code>. The backend (port 8000) also serves
+      the pre-built React SPA as static files – no separate web-server is required.
+    </p>
+  </section>
+
+  <!-- ═══ HIGH-LEVEL DIAGRAM ══════════════════════════════════════ -->
+  <section id="diagrams">
+    <h2>Architecture Diagrams</h2>
+
+    <h3>1 · High-Level System Architecture</h3>
+    <div class="diagram-wrap">
+      <div class="mermaid">
+graph TB
+    subgraph EXT["⬛ External Data Sources"]
+        JIRA["🔵 JIRA\n(Issues · Epics · Sprints)"]
+        GH["🐙 GitHub\n(Commits · PRs · Reviews)"]
+        CPLT["🤖 GitHub Copilot\nMetrics API"]
+        SEC["🛡️ Security Scan\nTools"]
+    end
+
+    subgraph FETCHERS["🔄 Data Fetchers  ·  src/"]
+        JF["jira_fetch.py"]
+        GHF["github_fetch.py"]
+        CMF["copilot_metrics_fetch.py"]
+        SSF["security_scan_fetch.py"]
+    end
+
+    subgraph KPI["⚙️ KPI Engine  ·  src/"]
+        ORCH["KppEvaluator.py\n(Orchestrator)"]
+        K1["kpp_k1 … kpp_k305\n(50 + KPI scripts)"]
+        HELP["kpi_helpers.py"]
+    end
+
+    subgraph STORE["📦 Data Store  ·  output/ · config/"]
+        CSV["k*-data.csv\n(KPI snapshots)"]
+        RCFG["Resources.csv\n(165 employees)"]
+        ROLES["Roles.csv\n(KPI definitions)"]
+        JCSV["JIRAIssues.csv"]
+        GHCSV["github_commits.csv"]
+        JCFG["jira_config.json\ngithub_config.json\n…"]
+    end
+
+    subgraph BE["🟢 Backend  ·  dashboard/backend/"]
+        FA["FastAPI\n(Uvicorn :8000)"]
+        SCHED["APScheduler\n(automated jobs)"]
+        AUTH["JWT Auth\n(python-jose)"]
+        API["REST API\n(/api/*)"]
+        SVC["Services\n(KPI · Scoring · Users)"]
+        STATIC["Static Files\n(React dist)"]
+    end
+
+    subgraph FE["🔵 Frontend  ·  dashboard/frontend/"]
+        REACT["React 18 + TypeScript"]
+        PAGES["Pages\n(15+ views)"]
+        CHARTS["Charts\n(ECharts · Recharts)"]
+        MUI["Material UI v5"]
+        ZUS["Zustand Store"]
+    end
+
+    JIRA --> JF
+    GH   --> GHF
+    CPLT --> CMF
+    SEC  --> SSF
+
+    JF  --> JCSV
+    GHF --> GHCSV
+    CMF --> CSV
+    SSF --> CSV
+
+    JCSV  --> ORCH
+    GHCSV --> ORCH
+    RCFG  --> ORCH
+    ROLES --> ORCH
+    JCFG  --> ORCH
+
+    ORCH --> K1
+    HELP --> K1
+    K1   --> CSV
+
+    CSV   --> SVC
+    RCFG  --> SVC
+    ROLES --> SVC
+
+    SVC   --> API
+    SCHED --> ORCH
+    AUTH  --> API
+    API   --> FA
+    STATIC --> FA
+
+    FA --> REACT
+    REACT --> PAGES
+    PAGES --> CHARTS
+    PAGES --> MUI
+    PAGES --> ZUS
+
+    style EXT  fill:#37474f,color:#fff,stroke:#546e7a
+    style FETCHERS fill:#1a237e,color:#fff,stroke:#283593
+    style KPI  fill:#4a148c,color:#fff,stroke:#6a1b9a
+    style STORE fill:#1b5e20,color:#fff,stroke:#2e7d32
+    style BE   fill:#004d40,color:#fff,stroke:#00695c
+    style FE   fill:#0d47a1,color:#fff,stroke:#1565c0
+      </div>
+    </div>
+    <p class="diagram-caption">Figure 1 – High-level system architecture showing data flow from external sources through the KPI engine to the frontend dashboard.</p>
+
+    <!-- ── API Structure ── -->
+    <h3>2 · Backend API &amp; Service Layer</h3>
+    <div class="diagram-wrap">
+      <div class="mermaid">
+graph LR
+    CLIENT["React SPA\n/ REST clients"]
+
+    subgraph MIDDLEWARE["Middleware"]
+        CORS["CORS"]
+        JWTMW["JWT Validation"]
+        ERRH["Global Error Handler"]
+    end
+
+    subgraph ROUTERS["API Routers  (app/api/ · app/routers/)"]
+        AUTH_R["auth\n/auth/login\n/auth/refresh"]
+        ADMIN_R["admin\n/admin/*"]
+        EMP_R["employees\n/api/employees*"]
+        ROLE_R["roles\n/api/roles*"]
+        TEAM_R["team_dashboard\n/api/team/*"]
+        SCRUM_R["scrum_dashboard\n/api/scrum/*"]
+        EMP_D["employee_dashboard\n/api/employee/*"]
+        RPT_R["reports\n/api/reports/*"]
+        HOME_R["home_stats\n/api/home-stats"]
+        PROJ_R["project_config\n/api/project-config*"]
+        SCORE_R["scoring\n/api/scoring*"]
+        FV_R["file_viewer\n/api/files/*"]
+        BCT_R["bug_cycle_time\n/api/bug-cycle-time"]
+        RPL_R["replan_tracker\n/api/replan-tracker"]
+        ADR_R["assignee_delay\n/api/assignee-delay"]
+    end
+
+    subgraph SERVICES["Services  (app/services/)"]
+        AUTH_S["AuthService\n(JWT · bcrypt)"]
+        RBAC_S["RBACService\n(role permissions)"]
+        SCHED_S["SchedulerService\n(APScheduler)"]
+        SCORE_S["ScoringService\n(ROG thresholds)"]
+        RES_S["ResourcesService\n(CSV lookup)"]
+        USER_S["UserService\n(users.json)"]
+    end
+
+    subgraph DATA_S["Data  (output/ · config/)"]
+        KPI_CSV["k*-data.csv"]
+        RES_CSV["Resources.csv"]
+        ROL_CSV["Roles.csv"]
+        USR_JSON["users.json\nrole_permissions.json"]
+        SCHED_ST["scheduler_state.json"]
+    end
+
+    CLIENT --> CORS --> JWTMW --> ROUTERS
+    ROUTERS --> SERVICES
+    SERVICES --> DATA_S
+    ERRH -.- ROUTERS
+
+    style MIDDLEWARE fill:#f57f17,color:#fff,stroke:#f9a825
+    style ROUTERS fill:#1b5e20,color:#fff,stroke:#2e7d32
+    style SERVICES fill:#004d40,color:#fff,stroke:#00695c
+    style DATA_S fill:#1a237e,color:#fff,stroke:#283593
+      </div>
+    </div>
+    <p class="diagram-caption">Figure 2 – Backend API structure: middleware → routers → services → data layer.</p>
+
+    <!-- ── Frontend ── -->
+    <h3>3 · Frontend Component Architecture</h3>
+    <div class="diagram-wrap">
+      <div class="mermaid">
+graph TD
+    subgraph ENTRY["Entry"]
+        IDX["main.tsx"]
+        APP["App.tsx\n(Router + Theme)"]
+    end
+
+    subgraph PAGES["Pages  (src/pages/)"]
+        LOGIN["LoginPage"]
+        HOME["HomePage"]
+        TEAM["TeamDashboardPage"]
+        SCRUM["ScrumDashboardPage"]
+        EMPL["EmployeeDashboardPage"]
+        ADMIN["AdminPage"]
+        MATRIX["MatrixReportPage"]
+        BCT["BugCycleTimePage"]
+        JIRA_EP["JiraEpicHierarchyPage"]
+        REPLAN["ReplanTrackerPage"]
+        DELAY["AssigneeDelayPage"]
+        PROJ["ProjectOnboardingPage"]
+        SCORE["ScoringLogicPage"]
+        RBAC["RbacConfigurationPage"]
+        CFG["ConfigurationPage"]
+        FVP["FileViewerTab"]
+        EMP_MGT["EmployeeManagementPage"]
+        ROLE_MGT["RoleManagementPage"]
+        USER_MGT["UserManagementConfigPage"]
+        ABOUT["AboutPage"]
+    end
+
+    subgraph STATE["State  (Zustand stores)"]
+        AUTH_CTX["AuthContext"]
+        STORE["Global Store"]
+    end
+
+    subgraph SERVICES_FE["API Services  (src/services/ · src/api/)"]
+        AX["axios client\n(JWT interceptor)"]
+    end
+
+    subgraph CHARTS_COMP["Visualisation"]
+        EC["ECharts\n(bar · line · radar · heatmap)"]
+        RC["Recharts\n(line · pie)"]
+        VIS["vis-network\n(JIRA epic tree)"]
+    end
+
+    IDX --> APP
+    APP --> PAGES
+    APP --> STATE
+    PAGES --> SERVICES_FE
+    PAGES --> CHARTS_COMP
+    PAGES --> STATE
+    SERVICES_FE --> AX
+
+    style ENTRY fill:#0d47a1,color:#fff,stroke:#1565c0
+    style PAGES fill:#1565c0,color:#fff,stroke:#1976d2
+    style STATE fill:#4527a0,color:#fff,stroke:#512da8
+    style SERVICES_FE fill:#00695c,color:#fff,stroke:#00897b
+    style CHARTS_COMP fill:#e65100,color:#fff,stroke:#ef6c00
+      </div>
+    </div>
+    <p class="diagram-caption">Figure 3 – Frontend component hierarchy from entry point through pages to state and visualisation layers.</p>
+
+    <!-- ── KPI Engine ── -->
+    <h3>4 · KPI Engine Pipeline</h3>
+    <div class="diagram-wrap">
+      <div class="mermaid">
+sequenceDiagram
+    participant SCHED as APScheduler
+    participant ORCH  as KppEvaluator
+    participant FETCH as Data Fetchers
+    participant EXT   as External APIs
+    participant KPI   as KPI Scripts (kpp_k*)
+    participant CSV   as output/k*-data.csv
+    participant BE    as FastAPI Backend
+
+    SCHED ->> ORCH: trigger run_kpi(kN)
+    ORCH  ->> FETCH: fetch latest data
+    FETCH ->> EXT: JIRA / GitHub / Copilot API
+    EXT  -->> FETCH: raw JSON / issues / commits
+    FETCH -->> ORCH: JIRAIssues.csv · github_commits.csv
+
+    ORCH  ->> KPI: call kN(resources, roles, raw_data)
+    Note over KPI: Compute Weekly · Monthly<br/>Quarterly · Annual values
+    KPI  -->> ORCH: result DataFrame
+
+    ORCH  ->> CSV: write k*-data.csv\n(CurrentDate,Week,Month,Quarter,Year,SAPID,Name,…)
+    CSV  -->> BE: auto-reloaded on next API request
+    BE   -->> BE: serve updated KPI data to SPA
+      </div>
+    </div>
+    <p class="diagram-caption">Figure 4 – KPI evaluation pipeline from scheduler trigger through computation to persistent output.</p>
+
+    <!-- ── Authentication ── -->
+    <h3>5 · Authentication &amp; RBAC Flow</h3>
+    <div class="diagram-wrap">
+      <div class="mermaid">
+sequenceDiagram
+    participant U  as User (Browser)
+    participant FE as React SPA
+    participant BE as FastAPI :8000
+    participant AS as AuthService
+    participant RS as RBACService
+
+    U  ->> FE: enter credentials
+    FE ->> BE: POST /auth/login {username, password}
+    BE ->> AS: verify_credentials()
+    AS ->> AS: bcrypt.check_password_hash()
+    AS -->> BE: UserRecord
+    BE ->> AS: create_access_token() → JWT (HS256, 24 h)
+    BE -->> FE: {access_token, role, sapid}
+    FE ->> FE: store token in memory + Axios header
+
+    Note over U,RS: Subsequent API calls
+
+    FE ->> BE: GET /api/team/… + Authorization: Bearer &lt;token&gt;
+    BE ->> AS: verify_token()
+    AS -->> BE: TokenData {sapid, role}
+    BE ->> RS: check_permission(role, "view_team_dashboard")
+    RS -->> BE: allowed / denied
+    BE -->> FE: 200 KPI data  |  403 Forbidden
+      </div>
+    </div>
+    <p class="diagram-caption">Figure 5 – JWT authentication and role-based access control flow.</p>
+
+    <!-- ── Deployment ── -->
+    <h3>6 · Deployment &amp; Infrastructure</h3>
+    <div class="diagram-wrap">
+      <div class="mermaid">
+graph LR
+    subgraph LOCAL["💻 Developer Machine"]
+        DEV["Local Dev\n(Vite :5173 + Uvicorn :8000)"]
+        BUILD["vite build\n→ dist/"]
+        WHEEL["build --wheel\n→ teamsight-X.X.X.whl"]
+        BUNDLE["package_complete_bundle.sh\n→ teamsight-complete-*.tar.gz"]
+    end
+
+    subgraph REMOTE["🖥️ Remote Server  10.222.2.217"]
+        subgraph DEPLOY["deploy_complete_bundle.sh"]
+            INST["pip install wheel"]
+            COPY["extract bundle"]
+        end
+        subgraph SVC["manage.sh"]
+            BACK["Backend\nUvicorn :8000"]
+            FRONT_S["Static SPA\n/assets (served by :8000)"]
+        end
+        LOGS["logs/backend.log\nlogs/frontend.log"]
+    end
+
+    DEV --> BUILD
+    DEV --> WHEEL
+    BUILD --> BUNDLE
+    WHEEL --> BUNDLE
+    BUNDLE -->|scp| DEPLOY
+    DEPLOY --> SVC
+    SVC --> LOGS
+
+    style LOCAL fill:#1a237e,color:#fff,stroke:#283593
+    style REMOTE fill:#1b5e20,color:#fff,stroke:#2e7d32
+    style DEPLOY fill:#004d40,color:#fff,stroke:#00695c
+    style SVC fill:#006064,color:#fff,stroke:#00838f
+      </div>
+    </div>
+    <p class="diagram-caption">Figure 6 – Build and deployment pipeline from local development to remote server.</p>
+  </section>
+
+  <!-- ═══ FRONTEND ════════════════════════════════════════════════ -->
+  <section id="frontend">
+    <h2>Frontend <span class="layer-tag tag-fe">React / TypeScript</span></h2>
+    <p>
+      The frontend is a <strong>React 18</strong> single-page application written in <strong>TypeScript 5.3</strong>,
+      built with <strong>Vite 5</strong> and served as pre-compiled static assets from the FastAPI backend.
+      Material UI v5 provides the component library while ECharts and Recharts handle all data visualisations.
+    </p>
+
+    <div class="tech-grid">
+      <div class="tech-card">
+        <div class="card-header">
+          <div class="card-icon" style="background:#e3f2fd">⚛️</div>
+          <h4>React <span class="version">18.2</span></h4>
+        </div>
+        <p>Core UI framework. Functional components with hooks throughout; no class components.</p>
+        <div class="tags"><span class="pill">Hooks</span><span class="pill">JSX/TSX</span><span class="pill">Suspense</span></div>
+      </div>
+      <div class="tech-card">
+        <div class="card-header">
+          <div class="card-icon" style="background:#e8eaf6">🔷</div>
+          <h4>TypeScript <span class="version">5.3</span></h4>
+        </div>
+        <p>Strict typing across all components, API clients, and state shapes.</p>
+        <div class="tags"><span class="pill">Strict mode</span><span class="pill">Type inference</span></div>
+      </div>
+      <div class="tech-card">
+        <div class="card-header">
+          <div class="card-icon" style="background:#fff3e0">⚡</div>
+          <h4>Vite <span class="version">5.1</span></h4>
+        </div>
+        <p>Build tool and dev server. HMR for development; tree-shaken production bundles.</p>
+        <div class="tags"><span class="pill">ESM</span><span class="pill">HMR</span><span class="pill">Rollup</span></div>
+      </div>
+      <div class="tech-card">
+        <div class="card-header">
+          <div class="card-icon" style="background:#e3f2fd">🎨</div>
+          <h4>Material UI <span class="version">v5.15</span></h4>
+        </div>
+        <p>Design system with theming, icons, data tables, dialogs, and form components.</p>
+        <div class="tags"><span class="pill">Emotion</span><span class="pill">sx prop</span><span class="pill">Dark/Light</span></div>
+      </div>
+      <div class="tech-card">
+        <div class="card-header">
+          <div class="card-icon" style="background:#fce4ec">📊</div>
+          <h4>Apache ECharts <span class="version">5.4</span></h4>
+        </div>
+        <p>Primary charting library. Used for bar, line, radar, heatmap, and trend charts.</p>
+        <div class="tags"><span class="pill">Canvas</span><span class="pill">SVG</span><span class="pill">echarts-for-react</span></div>
+      </div>
+      <div class="tech-card">
+        <div class="card-header">
+          <div class="card-icon" style="background:#f3e5f5">📈</div>
+          <h4>Recharts <span class="version">3.8</span></h4>
+        </div>
+        <p>Secondary charting library for responsive line, area, and pie charts.</p>
+        <div class="tags"><span class="pill">SVG</span><span class="pill">Responsive</span></div>
+      </div>
+      <div class="tech-card">
+        <div class="card-header">
+          <div class="card-icon" style="background:#e8f5e9">🕸️</div>
+          <h4>vis-network <span class="version">10.0</span></h4>
+        </div>
+        <p>Interactive graph/network visualisation for the JIRA Epic Hierarchy tree view.</p>
+        <div class="tags"><span class="pill">Canvas</span><span class="pill">Physics</span></div>
+      </div>
+      <div class="tech-card">
+        <div class="card-header">
+          <div class="card-icon" style="background:#e0f7fa">🐻</div>
+          <h4>Zustand <span class="version">4.5</span></h4>
+        </div>
+        <p>Lightweight global state management for auth, user context, and shared UI state.</p>
+        <div class="tags"><span class="pill">Minimal re-renders</span><span class="pill">Devtools</span></div>
+      </div>
+      <div class="tech-card">
+        <div class="card-header">
+          <div class="card-icon" style="background:#fff8e1">🌐</div>
+          <h4>Axios <span class="version">1.6</span></h4>
+        </div>
+        <p>HTTP client with request/response interceptors for JWT token injection.</p>
+        <div class="tags"><span class="pill">Interceptors</span><span class="pill">Error handling</span></div>
+      </div>
+      <div class="tech-card">
+        <div class="card-header">
+          <div class="card-icon" style="background:#e8eaf6">🔀</div>
+          <h4>React Router DOM <span class="version">v6.22</span></h4>
+        </div>
+        <p>Client-side routing with nested routes and URL query parameter drill-down.</p>
+        <div class="tags"><span class="pill">SPA</span><span class="pill">Nested routes</span><span class="pill">Query params</span></div>
+      </div>
+      <div class="tech-card">
+        <div class="card-header">
+          <div class="card-icon" style="background:#fce4ec">📅</div>
+          <h4>date-fns <span class="version">3.3</span></h4>
+        </div>
+        <p>Date calculation utilities for period comparisons and sprint timeline display.</p>
+        <div class="tags"><span class="pill">Tree-shakeable</span><span class="pill">Immutable</span></div>
+      </div>
+      <div class="tech-card">
+        <div class="card-header">
+          <div class="card-icon" style="background:#e8f5e9">🔑</div>
+          <h4>jwt-decode <span class="version">4.0</span></h4>
+        </div>
+        <p>Parses JWT claims on the frontend to extract user role and SAPID without verified signature.</p>
+        <div class="tags"><span class="pill">Lightweight</span></div>
+      </div>
+    </div>
+
+    <h3>Dashboard Pages</h3>
+    <table class="module-table">
+      <thead>
+        <tr><th>Page</th><th>Route Pattern</th><th>Purpose</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>LoginPage</td><td><code>/login</code></td><td>JWT authentication entry point</td></tr>
+        <tr><td>HomePage</td><td><code>/</code></td><td>Platform overview &amp; live service health stats</td></tr>
+        <tr><td>TeamDashboardPage</td><td><code>/team?team=X</code></td><td>Aggregated KPI scorecard for a team; lists scrums</td></tr>
+        <tr><td>ScrumDashboardPage</td><td><code>/scrum?scrum=Y</code></td><td>Scrum-level aggregated KPIs; lists members</td></tr>
+        <tr><td>EmployeeDashboardPage</td><td><code>/employee?name=Z</code></td><td>Individual KPI performance &amp; ROG history</td></tr>
+        <tr><td>MatrixReportPage</td><td><code>/reports/matrix</code></td><td>Multi-period KPI matrix across all employees</td></tr>
+        <tr><td>BugCycleTimeReportPage</td><td><code>/reports/bug-cycle-time</code></td><td>Bug resolution cycle-time analytics from JIRA</td></tr>
+        <tr><td>ReplanTrackerPage</td><td><code>/reports/replan-tracker</code></td><td>Tracks sprint replanning events over time</td></tr>
+        <tr><td>AssigneeDelayReportPage</td><td><code>/reports/assignee-delay</code></td><td>Attributable delay analysis per assignee</td></tr>
+        <tr><td>JiraEpicHierarchyReportPage</td><td><code>/reports/jira-epic-tree</code></td><td>Interactive vis-network graph of JIRA epic/story/task hierarchy</td></tr>
+        <tr><td>ProjectOnboardingPage</td><td><code>/config/project-onboarding</code></td><td>Configure project-to-team mappings for KPI sources</td></tr>
+        <tr><td>ScoringLogicPage</td><td><code>/config/scoring</code></td><td>View &amp; edit ROG thresholds and scoring rules</td></tr>
+        <tr><td>RbacConfigurationPage</td><td><code>/config/rbac</code></td><td>Configure role permissions at a granular level</td></tr>
+        <tr><td>EmployeeManagementPage</td><td><code>/admin/employees</code></td><td>CRUD operations on Resources.csv entries</td></tr>
+        <tr><td>RoleManagementPage</td><td><code>/admin/roles</code></td><td>Manage KPI role definitions in Roles.csv</td></tr>
+        <tr><td>UserManagementConfigPage</td><td><code>/admin/users</code></td><td>Manage dashboard login users</td></tr>
+        <tr><td>AdminPage</td><td><code>/admin</code></td><td>Job scheduling, service health, and system management</td></tr>
+        <tr><td>FileViewerTab</td><td><code>/admin/files</code></td><td>Browse and inspect KPI CSV and log files in-browser</td></tr>
+        <tr><td>AboutPage</td><td><code>/about</code></td><td>Version info, release notes, and component metadata</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ═══ BACKEND ═════════════════════════════════════════════════ -->
+  <section id="backend">
+    <h2>Backend <span class="layer-tag tag-be">FastAPI / Python</span></h2>
+    <p>
+      The backend is a <strong>FastAPI</strong> application running under <strong>Uvicorn</strong> on port 8000.
+      It exposes a REST API consumed by the SPA, manages scheduled KPI jobs through <strong>APScheduler</strong>,
+      enforces authentication via <strong>JWT</strong>, and serves the pre-built React SPA as static assets.
+    </p>
+
+    <div class="tech-grid">
+      <div class="tech-card">
+        <div class="card-header">
+          <div class="card-icon" style="background:#e8f5e9">🟢</div>
+          <h4>FastAPI <span class="version">0.109</span></h4>
+        </div>
+        <p>Async REST framework with automatic OpenAPI docs at <code>/docs</code> and <code>/redoc</code>.</p>
+        <div class="tags"><span class="pill">Async</span><span class="pill">OpenAPI</span><span class="pill">Pydantic</span></div>
+      </div>
+      <div class="tech-card">
+        <div class="card-header">
+          <div class="card-icon" style="background:#e0f7fa">⚡</div>
+          <h4>Uvicorn <span class="version">0.27</span></h4>
+        </div>
+        <p>ASGI server. Handles HTTP/1.1 connections and WebSocket upgrades when needed.</p>
+        <div class="tags"><span class="pill">ASGI</span><span class="pill">HTTP/1.1</span><span class="pill">lifespan</span></div>
+      </div>
+      <div class="tech-card">
+        <div class="card-header">
+          <div class="card-icon" style="background:#f3e5f5">✅</div>
+          <h4>Pydantic v2 <span class="version">2.1</span></h4>
+        </div>
+        <p>Runtime validation for request/response models and application settings.</p>
+        <div class="tags"><span class="pill">pydantic-settings</span><span class="pill">Validators</span></div>
+      </div>
+      <div class="tech-card">
+        <div class="card-header">
+          <div class="card-icon" style="background:#fff3e0">⏰</div>
+          <h4>APScheduler <span class="version">3.10</span></h4>
+        </div>
+        <p>In-process job scheduler. Triggers KPI recalculations on configurable cron/interval schedules.</p>
+        <div class="tags"><span class="pill">Cron</span><span class="pill">Interval</span><span class="pill">Persistent state</span></div>
+      </div>
+      <div class="tech-card">
+        <div class="card-header">
+          <div class="card-icon" style="background:#fce4ec">🔐</div>
+          <h4>python-jose <span class="version">3.3</span></h4>
+        </div>
+        <p>JWT signing and verification. Tokens use HS256 algorithm, 24-hour expiry.</p>
+        <div class="tags"><span class="pill">HS256</span><span class="pill">JWT</span></div>
+      </div>
+      <div class="tech-card">
+        <div class="card-header">
+          <div class="card-icon" style="background:#e8f5e9">🔒</div>
+          <h4>passlib (bcrypt) <span class="version">1.7</span></h4>
+        </div>
+        <p>Password hashing with bcrypt. Used in AuthService for credential storage and verification.</p>
+        <div class="tags"><span class="pill">bcrypt</span><span class="pill">Argon2-ready</span></div>
+      </div>
+      <div class="tech-card">
+        <div class="card-header">
+          <div class="card-icon" style="background:#e3f2fd">🐼</div>
+          <h4>pandas <span class="version">2.2</span> + numpy <span class="version">1.26</span></h4>
+        </div>
+        <p>Primary data-manipulation libraries for loading, joining, and aggregating CSV KPI snapshots.</p>
+        <div class="tags"><span class="pill">DataFrame</span><span class="pill">groupby</span><span class="pill">pyarrow backend</span></div>
+      </div>
+      <div class="tech-card">
+        <div class="card-header">
+          <div class="card-icon" style="background:#fff8e1">📤</div>
+          <h4>Export Libraries</h4>
+        </div>
+        <p>openpyxl (Excel), WeasyPrint (PDF), ReportLab (PDF) — used by report export endpoints.</p>
+        <div class="tags"><span class="pill">XLSX</span><span class="pill">PDF</span></div>
+      </div>
+      <div class="tech-card">
+        <div class="card-header">
+          <div class="card-icon" style="background:#e0f7fa">👁️</div>
+          <h4>watchdog <span class="version">4.0</span></h4>
+        </div>
+        <p>File-system events. Monitors <code>output/</code> for CSV changes to invalidate API caches.</p>
+        <div class="tags"><span class="pill">FSEvents</span><span class="pill">inotify</span></div>
+      </div>
+      <div class="tech-card">
+        <div class="card-header">
+          <div class="card-icon" style="background:#fce4ec">🖥️</div>
+          <h4>psutil <span class="version">5.9</span></h4>
+        </div>
+        <p>System metrics (CPU, RAM, disk) surfaced through the Admin health-check API.</p>
+        <div class="tags"><span class="pill">Cross-platform</span></div>
+      </div>
+      <div class="tech-card">
+        <div class="card-header">
+          <div class="card-icon" style="background:#e8eaf6">🌐</div>
+          <h4>aiohttp <span class="version">3.9</span></h4>
+        </div>
+        <p>Async HTTP client used by data fetchers when calling external APIs (JIRA, GitHub).</p>
+        <div class="tags"><span class="pill">Async</span><span class="pill">Connection pool</span></div>
+      </div>
+      <div class="tech-card">
+        <div class="card-header">
+          <div class="card-icon" style="background:#f3e5f5">🗄️</div>
+          <h4>pyodbc <span class="version">5.0</span></h4>
+        </div>
+        <p>ODBC connectivity for optional Azure SQL integration for audit logs and persistent storage.</p>
+        <div class="tags"><span class="pill">ODBC</span><span class="pill">Azure SQL</span></div>
+      </div>
+    </div>
+
+    <h3>API Modules</h3>
+    <table class="module-table">
+      <thead>
+        <tr><th>Module</th><th>Path prefix</th><th>Responsibility</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>auth</code></td><td><code>/auth</code></td><td>Login, token refresh, password change</td></tr>
+        <tr><td><code>admin</code></td><td><code>/admin</code></td><td>Service management, scheduler control, health diagnostics</td></tr>
+        <tr><td><code>home_stats</code></td><td><code>/api/home-stats</code></td><td>Aggregate counts for the home page overview cards</td></tr>
+        <tr><td><code>employees</code></td><td><code>/api/employees</code></td><td>CRUD and lookup for Resources.csv entries</td></tr>
+        <tr><td><code>roles</code></td><td><code>/api/roles</code></td><td>Roles.csv KPI definition management</td></tr>
+        <tr><td><code>team_dashboard</code></td><td><code>/api/team</code></td><td>Team-level KPI aggregation and ROG scoring</td></tr>
+        <tr><td><code>scrum_dashboard</code></td><td><code>/api/scrum</code></td><td>Scrum-level KPI aggregation</td></tr>
+        <tr><td><code>employee_dashboard</code></td><td><code>/api/employee</code></td><td>Individual KPI time-series, ROG history, achievement rates</td></tr>
+        <tr><td><code>reports</code></td><td><code>/api/reports</code></td><td>Matrix report with Excel/PDF export</td></tr>
+        <tr><td><code>bug_cycle_time</code></td><td><code>/api/bug-cycle-time</code></td><td>JIRA bug resolution cycle-time analytics</td></tr>
+        <tr><td><code>replan_tracker</code></td><td><code>/api/replan-tracker</code></td><td>Sprint replanning event reports</td></tr>
+        <tr><td><code>assignee_delay_report</code></td><td><code>/api/assignee-delay</code></td><td>Assignee-attributable delay computation</td></tr>
+        <tr><td><code>project_config</code></td><td><code>/api/project-config</code></td><td>Manage project → team KPI source mappings</td></tr>
+        <tr><td><code>scoring</code></td><td><code>/api/scoring</code></td><td>ROG threshold configuration and scoring preview</td></tr>
+        <tr><td><code>file_viewer</code></td><td><code>/api/files</code></td><td>List and stream KPI CSV and log files</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ═══ KPI ENGINE ══════════════════════════════════════════════ -->
+  <section id="kpi-engine">
+    <h2>KPI Engine <span class="layer-tag tag-kpi">Python · src/</span></h2>
+    <p>
+      The KPI Engine is a collection of Python scripts that transform raw issue-tracker and code-repository
+      data into structured employee-level KPI measurements. Each KPI script is independently runnable and
+      produces a standardised CSV output.
+    </p>
+    <p>
+      <strong>KppEvaluator.py</strong> acts as the orchestrator: it registers all KPI functions, resolves
+      equivalent KPIs (where two KPIs share the same computation), coordinates input data loading, and
+      dispatches execution to individual scripts.
+    </p>
+
+    <h3>Key Source Files</h3>
+    <table class="module-table">
+      <thead>
+        <tr><th>File</th><th>Purpose</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>KppEvaluator.py</code></td><td>Orchestrator — registers 27 KPIs, resolves equivalents, dispatches runs</td></tr>
+        <tr><td><code>kpi_helpers.py</code></td><td>Date utilities (fiscal calendar, ISO week, quarter labels), SAPID normalisation</td></tr>
+        <tr><td><code>jira_fetch.py</code></td><td>JIRA REST API fetcher; checkpointed incremental fetch; writes JIRAIssues.csv</td></tr>
+        <tr><td><code>github_fetch.py</code></td><td>GitHub REST API fetcher; commits, PRs, reviews; writes github_commits.csv</td></tr>
+        <tr><td><code>copilot_metrics_fetch.py</code></td><td>GitHub Copilot Metrics API; active suggestions, acceptance rates</td></tr>
+        <tr><td><code>security_scan_fetch.py</code></td><td>Security scan result ingest; configurable per-project tool mappings</td></tr>
+        <tr><td><code>kpp_bug_cycle_time.py</code></td><td>Bug resolution cycle-time computation (JIRA)</td></tr>
+        <tr><td><code>kpp_replan_tracker.py</code></td><td>Sprint replanning event detection (JIRA sprint history)</td></tr>
+        <tr><td><code>kpp_assignee_attributable_delay.py</code></td><td>Delay analysis based on assignee inactivity windows</td></tr>
+        <tr><td><code>kpp_k*.py</code> (50+ scripts)</td><td>Individual KPI script — one file per KPI metric</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Output CSV Schema (all KPI scripts)</h3>
+    <p>Every KPI script emits exactly these columns in this order:</p>
+    <table class="module-table">
+      <thead>
+        <tr><th>Column</th><th>Type</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>CurrentDate</code></td><td>string</td><td>Snapshot date (e.g. <code>20260329</code>)</td></tr>
+        <tr><td><code>Week</code></td><td>string</td><td>ISO week label (e.g. <code>202613</code>)</td></tr>
+        <tr><td><code>Month</code></td><td>string</td><td>Month label (e.g. <code>Mar2026</code>)</td></tr>
+        <tr><td><code>Quarter</code></td><td>string</td><td>Quarter label (e.g. <code>JFM2026</code>)</td></tr>
+        <tr><td><code>Year</code></td><td>string</td><td>Fiscal year label (e.g. <code>FY2025</code>)</td></tr>
+        <tr><td><code>SAPID</code></td><td>string (int)</td><td>Employee SAPID – primary key; no decimal suffix</td></tr>
+        <tr><td><code>Name</code></td><td>string</td><td>Employee display name as in Resources.csv</td></tr>
+        <tr><td><code>Weekly</code></td><td>numeric</td><td>KPI value for the current ISO week</td></tr>
+        <tr><td><code>Monthly</code></td><td>numeric</td><td>KPI value for the current month</td></tr>
+        <tr><td><code>Quarterly</code></td><td>numeric</td><td>KPI value for the current quarter</td></tr>
+        <tr><td><code>Annual</code></td><td>numeric</td><td>KPI value for the current fiscal year</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ═══ INTEGRATIONS ════════════════════════════════════════════ -->
+  <section id="integrations">
+    <h2>External Integrations <span class="layer-tag tag-int">APIs</span></h2>
+    <div class="tech-grid">
+      <div class="tech-card">
+        <div class="card-header">
+          <div class="card-icon" style="background:#e3f2fd">🔵</div>
+          <h4>Atlassian JIRA</h4>
+        </div>
+        <p>REST API v2/v3. Fetches issues, epics, sprint data, and changelog history. Checkpointed incremental sync.</p>
+        <div class="tags"><span class="pill">REST</span><span class="pill">Basic Auth / API Token</span><span class="pill">Paginated</span></div>
+      </div>
+      <div class="tech-card">
+        <div class="card-header">
+          <div class="card-icon" style="background:#e8f5e9">🐙</div>
+          <h4>GitHub REST API</h4>
+        </div>
+        <p>Fetches commits, pull-requests, reviews, and user activity per configured repository.</p>
+        <div class="tags"><span class="pill">REST v3</span><span class="pill">Personal Access Token</span><span class="pill">Paginated</span></div>
+      </div>
+      <div class="tech-card">
+        <div class="card-header">
+          <div class="card-icon" style="background:#f3e5f5">🤖</div>
+          <h4>GitHub Copilot Metrics API</h4>
+        </div>
+        <p>Organisation-level Copilot usage metrics: active users, suggested lines, acceptance rates.</p>
+        <div class="tags"><span class="pill">GitHub Apps</span><span class="pill">Beta API</span></div>
+      </div>
+      <div class="tech-card">
+        <div class="card-header">
+          <div class="card-icon" style="background:#fff3e0">🛡️</div>
+          <h4>Security Scan Tools</h4>
+        </div>
+        <p>Configurable integration with SAST/DAST tools (e.g. SonarQube, Checkmarx). Per-project tool mapping via <code>security_scan_config.json</code>.</p>
+        <div class="tags"><span class="pill">SAST</span><span class="pill">DAST</span><span class="pill">Config-driven</span></div>
+      </div>
+      <div class="tech-card">
+        <div class="card-header">
+          <div class="card-icon" style="background:#e8eaf6">☁️</div>
+          <h4>Azure SQL (optional)</h4>
+        </div>
+        <p>pyodbc-based optional connector for long-term audit log persistence and cross-server data sharing.</p>
+        <div class="tags"><span class="pill">ODBC</span><span class="pill">pyodbc</span><span class="pill">Optional</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ DATA LAYER ══════════════════════════════════════════════ -->
+  <section id="data">
+    <h2>Data Layer <span class="layer-tag tag-inf">CSV / JSON</span></h2>
+    <p>
+      TeamSight uses a <strong>file-based data store</strong> — no database server is required by default.
+      All persistent data lives in <code>output/</code>, <code>config/</code>, and <code>data/</code> directories
+      as CSV and JSON files. pyarrow is used as the pandas backend for faster CSV parsing.
+    </p>
+    <table class="module-table">
+      <thead><tr><th>File / Directory</th><th>Format</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td><code>config/Resources.csv</code></td><td>CSV</td><td>165 employees — SAPID, Name, Team, Primary Role, Secondary Role, Scrum</td></tr>
+        <tr><td><code>config/Roles.csv</code></td><td>CSV</td><td>298 rows — KPI definitions with targets, measurement criteria, role applicability</td></tr>
+        <tr><td><code>config/jira_config.json</code></td><td>JSON</td><td>JIRA server URL, project keys, auth credentials</td></tr>
+        <tr><td><code>config/github_config.json</code></td><td>JSON</td><td>GitHub org, repo list, PAT token</td></tr>
+        <tr><td><code>config/copilot_metrics_config.json</code></td><td>JSON</td><td>Copilot org, enterprise slug, API token</td></tr>
+        <tr><td><code>config/security_scan_config.json</code></td><td>JSON</td><td>Security tool project-to-team mappings</td></tr>
+        <tr><td><code>config/scoring_config.json</code></td><td>JSON</td><td>ROG threshold overrides per KPI</td></tr>
+        <tr><td><code>output/k*-data.csv</code></td><td>CSV</td><td>KPI snapshots — one file per KPI, appended on each run</td></tr>
+        <tr><td><code>output/JIRAIssues.csv</code></td><td>CSV</td><td>JIRA issues snapshot — used by JIRA-based KPI scripts</td></tr>
+        <tr><td><code>output/github_commits.csv</code></td><td>CSV</td><td>GitHub commit log — used by code-activity KPI scripts</td></tr>
+        <tr><td><code>data/users.json</code></td><td>JSON</td><td>Dashboard login users with hashed passwords and roles</td></tr>
+        <tr><td><code>data/role_permissions.json</code></td><td>JSON</td><td>RBAC permission matrix (role → allowed operations)</td></tr>
+        <tr><td><code>data/scheduler_state.json</code></td><td>JSON</td><td>APScheduler persistent job state</td></tr>
+        <tr><td><code>data/fetch_checkpoint.json</code></td><td>JSON</td><td>Last-fetched timestamps for incremental JIRA/GitHub sync</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ═══ SECURITY ════════════════════════════════════════════════ -->
+  <section id="security">
+    <h2>Security <span class="layer-tag tag-inf">Auth · RBAC · Transport</span></h2>
+    <ul class="security-list">
+      <li>
+        <span class="icon">🔐</span>
+        <div><strong>JWT Authentication (HS256)</strong> — All API endpoints except <code>/auth/login</code>
+        and <code>/health</code> require a valid Bearer token. Tokens are signed with a configurable secret key
+        and expire after 24 hours.</div>
+      </li>
+      <li>
+        <span class="icon">🔒</span>
+        <div><strong>Password Hashing (bcrypt)</strong> — User passwords are never stored in plain text.
+        passlib + bcrypt with auto-generated salts is used in AuthService.</div>
+      </li>
+      <li>
+        <span class="icon">🛡️</span>
+        <div><strong>Role-Based Access Control (RBAC)</strong> — Four roles: <em>Admin</em>, <em>API User</em>,
+        <em>Viewer</em>, <em>Manager</em>. Permission checks enforced via FastAPI dependencies
+        (<code>require_role</code>, <code>require_permission</code>, <code>require_admin</code>).</div>
+      </li>
+      <li>
+        <span class="icon">🌐</span>
+        <div><strong>CORS Middleware</strong> — Configurable allowed origins via <code>cors_origins</code>
+        settings. Development allows all origins; production should restrict to the deployment domain.</div>
+      </li>
+      <li>
+        <span class="icon">🔑</span>
+        <div><strong>Secrets via Environment</strong> — Sensitive values (JWT secret, API tokens) are loaded
+        from <code>dashboard/backend/.env</code> via pydantic-settings, never hardcoded.</div>
+      </li>
+      <li>
+        <span class="icon">✅</span>
+        <div><strong>Input Validation</strong> — All API request bodies and query parameters are validated
+        by Pydantic models before reaching business logic, preventing injection-style attacks.</div>
+      </li>
+    </ul>
+  </section>
+
+  <!-- ═══ DATA FLOW ════════════════════════════════════════════════ -->
+  <section id="data-flow">
+    <h2>End-to-End Data Flow</h2>
+    <ol class="flow-steps">
+      <li><strong>Data Fetch</strong> — jira_fetch.py, github_fetch.py, and copilot_metrics_fetch.py poll
+      external APIs (on schedule or manually) and write raw snapshots to <code>output/JIRAIssues.csv</code>
+      and <code>output/github_commits.csv</code>.</li>
+      <li><strong>KPI Computation</strong> — KppEvaluator dispatches the relevant <code>kpp_k*.py</code>
+      script. The script joins raw data with <code>Resources.csv</code> and <code>Roles.csv</code> to compute
+      Weekly/Monthly/Quarterly/Annual values per employee.</li>
+      <li><strong>CSV Persistence</strong> — The result DataFrame is appended (or replaced) to
+      <code>output/k*-data.csv</code> with SAPID as the primary key per row.</li>
+      <li><strong>Cache Invalidation</strong> — watchdog detects the file change; the backend invalidates
+      its in-memory DataFrame cache. Transition-history caches are re-warmed in background.</li>
+      <li><strong>API Request</strong> — The React SPA makes an authenticated GET request (with JWT) to e.g.
+      <code>/api/employee/kpis?name=John&amp;period=Weekly</code>.</li>
+      <li><strong>Backend Processing</strong> — FastAPI loads the relevant <code>k*-data.csv</code> via
+      pandas, filters/aggregates by employee, applies ROG scoring thresholds from <code>scoring_config.json</code>,
+      and serialises to JSON.</li>
+      <li><strong>Visualisation</strong> — The SPA receives the KPI payload and renders bar/radar/heatmap
+      charts via ECharts and ROG status badges via Material UI.</li>
+    </ol>
+  </section>
+
+  <!-- ═══ MODULE REFERENCE ════════════════════════════════════════ -->
+  <section id="modules">
+    <h2>Key Module Reference</h2>
+    <table class="module-table">
+      <thead><tr><th>Layer</th><th>Module / File</th><th>Technology</th><th>Key Interactions</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Frontend</td><td><code>App.tsx</code></td><td>React Router v6</td>
+          <td>Root SPA shell; defines all routes; wraps with Theme and Auth context</td>
+        </tr>
+        <tr>
+          <td>Frontend</td><td><code>TeamDashboardPage</code></td><td>React, ECharts, MUI</td>
+          <td>Fetches <code>/api/team/*</code>; renders aggregated KPI cards and drills to ScrumDashboard</td>
+        </tr>
+        <tr>
+          <td>Frontend</td><td><code>EmployeeDashboardPage</code></td><td>React, ECharts</td>
+          <td>Fetches <code>/api/employee/*</code>; renders individual KPI sparklines and ROG history</td>
+        </tr>
+        <tr>
+          <td>Frontend</td><td><code>AdminPage</code></td><td>React, MUI, axios</td>
+          <td>Calls <code>/admin/*</code>; triggers KPI runs, shows scheduler status and service health</td>
+        </tr>
+        <tr>
+          <td>Backend</td><td><code>main.py</code></td><td>FastAPI, lifespan</td>
+          <td>App factory; registers all routers; initialises scheduler on startup; serves SPA</td>
+        </tr>
+        <tr>
+          <td>Backend</td><td><code>services/scheduler.py</code></td><td>APScheduler</td>
+          <td>Schedules hourly/daily KPI jobs; persists state to <code>scheduler_state.json</code></td>
+        </tr>
+        <tr>
+          <td>Backend</td><td><code>services/auth_service.py</code></td><td>python-jose, passlib</td>
+          <td>JWT generation/verification; bcrypt password hash comparison</td>
+        </tr>
+        <tr>
+          <td>Backend</td><td><code>services/scoring_service.py</code></td><td>pandas, pydantic</td>
+          <td>Applies ROG thresholds (Green ≥ 0.62, Orange ≥ 0.40) to KPI values</td>
+        </tr>
+        <tr>
+          <td>Backend</td><td><code>api/reports.py</code></td><td>pandas, openpyxl, WeasyPrint</td>
+          <td>Matrix report generation; transition-history caching; Excel/PDF export</td>
+        </tr>
+        <tr>
+          <td>KPI Engine</td><td><code>KppEvaluator.py</code></td><td>Python, pandas</td>
+          <td>Orchestrates all 27 KPIs; resolves equivalents (k8→k4, k20→k16, k22→k18)</td>
+        </tr>
+        <tr>
+          <td>KPI Engine</td><td><code>kpi_helpers.py</code></td><td>Python, datetime</td>
+          <td>Fiscal calendar (FY), ISO week/month/quarter label generation, SAPID cleaning</td>
+        </tr>
+        <tr>
+          <td>Fetcher</td><td><code>jira_fetch.py</code></td><td>requests, aiohttp</td>
+          <td>Incremental JIRA sync with checkpoint; writes JIRAIssues.csv and epic tree</td>
+        </tr>
+        <tr>
+          <td>Fetcher</td><td><code>github_fetch.py</code></td><td>requests, pandas</td>
+          <td>GitHub commit/PR/review fetch; maps users to SAPID via Resources.csv</td>
+        </tr>
+        <tr>
+          <td>Config</td><td><code>Resources.csv</code></td><td>CSV</td>
+          <td>Ground truth for employee identity; referenced by every KPI script and backend service</td>
+        </tr>
+        <tr>
+          <td>Config</td><td><code>Roles.csv</code></td><td>CSV</td>
+          <td>Defines KPI applicability per role, measurement criteria, and weekly/quarterly targets</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ═══ DEPLOYMENT ══════════════════════════════════════════════ -->
+  <section id="deployment">
+    <h2>Deployment <span class="layer-tag tag-inf">Infrastructure</span></h2>
+
+    <h3>Environment Requirements</h3>
+    <div class="tech-grid">
+      <div class="tech-card">
+        <div class="card-header">
+          <div class="card-icon" style="background:#e8f5e9">🐍</div>
+          <h4>Python Runtime</h4>
+        </div>
+        <p><strong>3.10+</strong> required. Two virtual environments: <code>.venv/</code> (KPI engine) and
+        <code>dashboard/backend/venv/</code> (FastAPI).</p>
+        <div class="tags"><span class="pill">venv</span><span class="pill">pip</span><span class="pill">wheel</span></div>
+      </div>
+      <div class="tech-card">
+        <div class="card-header">
+          <div class="card-icon" style="background:#e3f2fd">🟩</div>
+          <h4>Node.js Runtime</h4>
+        </div>
+        <p><strong>18+</strong> required for <code>npm run build</code>. Only needed at deploy time to compile the SPA into static assets.</p>
+        <div class="tags"><span class="pill">npm</span><span class="pill">Build-time only</span></div>
+      </div>
+      <div class="tech-card">
+        <div class="card-header">
+          <div class="card-icon" style="background:#fff3e0">🖥️</div>
+          <h4>Remote Server</h4>
+        </div>
+        <p>Linux (Ubuntu/Debian recommended). Deployment path: <code>/opt/teamsight/teamsight/</code>. Single port 8000 serves both API and SPA.</p>
+        <div class="tags"><span class="pill">root@10.222.2.217</span><span class="pill">Port 8000</span></div>
+      </div>
+      <div class="tech-card">
+        <div class="card-header">
+          <div class="card-icon" style="background:#fce4ec">📦</div>
+          <h4>Package Distribution</h4>
+        </div>
+        <p>KPI engine distributed as a Python wheel (<code>teamsight-X.X.X-*.whl</code>) via <code>setup.py</code>.
+        Full deployment bundle packaged with <code>package_complete_bundle.sh</code>.</p>
+        <div class="tags"><span class="pill">setuptools</span><span class="pill">wheel</span><span class="pill">tar.gz bundle</span></div>
+      </div>
+    </div>
+
+    <h3>Service Management Commands</h3>
+    <table class="module-table">
+      <thead><tr><th>Command</th><th>Effect</th></tr></thead>
+      <tbody>
+        <tr><td><code>./dashboard/manage.sh start backend</code></td><td>Start Uvicorn on port 8000</td></tr>
+        <tr><td><code>./dashboard/manage.sh stop backend</code></td><td>Gracefully stop the backend process</td></tr>
+        <tr><td><code>./dashboard/manage.sh restart backend</code></td><td>Restart backend (required after code / Roles.csv changes)</td></tr>
+        <tr><td><code>./dashboard/manage.sh status</code></td><td>Show running PIDs and port bindings</td></tr>
+        <tr><td><code>./dashboard/manage.sh logs backend 100</code></td><td>Tail last 100 lines of backend log</td></tr>
+        <tr><td><code>./dashboard/manage.sh follow backend</code></td><td>Live log streaming (Ctrl+C to stop)</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+</main>
+
+<footer>
+  TeamSight v2.1.8 · Technology Stack &amp; Architecture Reference · Generated April 2026
+</footer>
+
+<script>
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: 'default',
+    themeVariables: {
+      primaryColor: '#1976d2',
+      primaryTextColor: '#fff',
+      primaryBorderColor: '#1565c0',
+      lineColor: '#555',
+      secondaryColor: '#e3f2fd',
+      tertiaryColor: '#f5f7fa'
+    },
+    flowchart: { curve: 'basis', useMaxWidth: true },
+    sequence:  { useMaxWidth: true, actorMargin: 50 }
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+name: CI - Build
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    name: Build Deployment Bundle
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install build tools
+        run: pip install build wheel setuptools
+
+      - name: Build Python wheel
+        run: python -m build --wheel
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install frontend dependencies
+        run: npm ci
+        working-directory: dashboard/frontend
+
+      - name: Type-check frontend
+        run: npm run type-check
+        working-directory: dashboard/frontend
+
+      - name: Package deployment bundle
+        id: package
+        run: |
+          chmod +x scripts/package_complete_bundle.sh
+          scripts/package_complete_bundle.sh \
+            --target-folder /opt/teamsight/teamsight \
+            --no-prompt
+          BUNDLE=$(ls -1t dist/teamsight-complete-*.tar.gz | head -1)
+          echo "bundle-name=$(basename "$BUNDLE")" >> "$GITHUB_OUTPUT"
+          echo "Bundle created: $(basename "$BUNDLE")"
+
+      - name: Upload bundle artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: deployment-bundle
+          path: dist/teamsight-complete-*.tar.gz
+          retention-days: 7
